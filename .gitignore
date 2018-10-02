@@ -1,0 +1,8 @@
+*.class
+*.log
+
+FeatureEngine-benchmark/target
+FeatureEngine-benchmark/project/target
+FeatureEngine-benchmark/spark-warehouse
+FeatureEngine-benchmark/.idea
+
