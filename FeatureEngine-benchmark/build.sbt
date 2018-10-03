@@ -31,42 +31,14 @@ javaOptions ++= Seq(
   "-XX:+CMSClassUnloadingEnabled"
 )
 
+// Bouldless and hadoop-io-extensions Repositories needed for FeatureEngine dependancy resolution
 resolvers += "Ode hadoop-io-extensions Repository" at "https://github.com/Project-ODE/hadoop-io-extensions/raw/repository"
+resolvers += "Boundless Repository" at "http://repo.boundlessgeo.com/main/"
 resolvers += "Ode FeatureEngine Repository" at "https://github.com/Project-ODE/FeatureEngine/raw/repository"
 
 // Explicitly get scala version and don't show warnings
 // https://mvnrepository.com/artifact/org.scala-lang/scala-library
 libraryDependencies += "org.scala-lang" % "scala-library" % "2.11.12"
 
-// Spark provided dependencies
-// https://mvnrepository.com/artifact/org.apache.spark/spark-core_2.11
-libraryDependencies += "org.apache.spark" % "spark-core_2.11" % "2.3.1" % "provided"
-// https://mvnrepository.com/artifact/org.apache.spark/spark-sql_2.11
-libraryDependencies += "org.apache.spark" % "spark-sql_2.11" % "2.3.1" % "provided"
-libraryDependencies += "org.apache.spark" % "spark-mllib_2.11" % "2.3.1" % "provided"
-
-// solving spark-jackson dependency issue
-dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-core" % "2.9.6"
-dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.6"
-dependencyOverrides += "com.fasterxml.jackson.module" % "jackson-module-scala_2.11" % "2.9.6"
-
-// Test dependencies
-// https://mvnrepository.com/artifact/org.scalatest/scalatest_2.11
-libraryDependencies += "org.scalatest" % "scalatest_2.11" % "3.0.5" % "test"
-// https://mvnrepository.com/artifact/com.holdenkarau/spark-testing-base_2.11
-libraryDependencies += "com.holdenkarau" % "spark-testing-base_2.11" % "2.3.1_0.10.0" % "test"
-
-
-// Project dependencies
-// https://mvnrepository.com/artifact/com.github.scopt/scopt_2.11
-libraryDependencies += "com.github.scopt" % "scopt_2.11" % "3.7.0"
-// https://mvnrepository.com/artifact/org.json4s/json4s-jackson_2.11
-libraryDependencies += "org.json4s" % "json4s-jackson_2.11" % "3.5.4"
-// https://mvnrepository.com/artifact/edu.emory.mathcs/JTransforms
-libraryDependencies += "edu.emory.mathcs" % "JTransforms" % "2.4"
-// https://github.com/Project-ODE/hadoop-io-extensions
-libraryDependencies += "org.oceandataexplorer" % "hadoop-io-extensions" % "0.4"
 // https://github.com/Project-ODE/FeatureEngine
-libraryDependencies += "org.oceandataexplorer" % "FeatureEngine" % "0.1"
-// https://mvnrepository.com/artifact/com.github.nscala-time/nscala-time
-libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "2.20.0"
+libraryDependencies += "org.oceandataexplorer" % "FeatureEngine_2.11" % "0.1"
