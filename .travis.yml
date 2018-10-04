@@ -17,3 +17,8 @@ script:
   - sbt compile
   - sbt test
   - sbt scalastyle
+
+# Send notifs to slack
+notifications:
+  slack:
+    secure: "TeoxLj02yGhZqKEO4lDpQJZsaepoyyFf6mI0EZRJv3HCXZ85E5oNrw27L1DeXIbM4ap/pgdzBlfgzVPMPN3bI5G+th4MAvs7QbxfoBAtWUoQxet4xO/WPXfemlMOFONicre7T5lLy5c7HLB05jzo972j89nKuPPiqVboHLQQ5X37oCeDEn983l+lHzwMxn2DbnWyoqVSKih7bXBbHWXNnURXZXmsUA9ZDNnQCj3UpRSNhi67SnXAl5c/2Xk8neY0kpsW3hiTfE2IX5yiut4G+jiNioJxYUKSA2+fyq9N2+IT1ynmXOmYm/WXFNch6zHk4XztTOBeL9VInKo8SEvUqLqu461FAYWeyfV/bAN5HmgFfipePK/Ip+p9dL4bAseJr8TJ8lAr2j2dmvoBQezCOfml403a+Fwh8BGROwUC7g66aPZ+bdr+X34JUgeS4yJKSTsy+G6xqIeBUzAAciVSsAtCT6UFbe7wpIk05X+/Qfzp79FkkvzVmvhn36d3tc9kfhGrbOLnfx6gD0j+4F8S5Klq/RcYRFDLjz5T8oebRjYhCc0AtjJrpZ3eTv/fpj+w4cx4UaWboMByniFguQycInbSpBJo9bUm8b4BcTnTigw5zE2ukxAL3+AskvXrE4GWY+n+PLuH0wwgeTIND6ljnnCYrH2hvl0zjtwm2shLCrc="
