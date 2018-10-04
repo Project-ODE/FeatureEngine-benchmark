@@ -41,4 +41,4 @@ resolvers += "Ode FeatureEngine Repository" at "https://github.com/Project-ODE/F
 libraryDependencies += "org.scala-lang" % "scala-library" % "2.11.12"
 
 // https://github.com/Project-ODE/FeatureEngine
-libraryDependencies += "org.oceandataexplorer" % "FeatureEngine_2.11" % "0.1"
+libraryDependencies += "org.oceandataexplorer" % "featureengine_2.11" % "0.1"
