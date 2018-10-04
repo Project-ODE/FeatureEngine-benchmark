@@ -1,4 +1,7 @@
-# ODE Feature Engine benchmark
+# ODE Feature Engine benchmark [![Build Status](https://travis-ci.org/Project-ODE/FeatureEngine-benchmark.svg?branch=master)](https://travis-ci.org/Project-ODE/FeatureEngine-benchmark)
+
+This package is about benchmarking the ODE [FeatureEngine](https://github.com/Project-ODE/FeatureEngine)
+codebase against its exact counterpart in matlab and python
 
 ## Pre-requisites
 
