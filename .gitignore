@@ -1,3 +1,15 @@
+# ignore matlab tmp files
+*.asv
+*.m~
+
+# ignore results expect matlab's that needs to be stored
+resources/results/python*
+resourcesresults/feature_engine*
+
+*.pyc
+__pycache__
+
+# ignore scala build files
 *.class
 *.cache
 *.log
