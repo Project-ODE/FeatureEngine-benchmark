@@ -58,10 +58,11 @@ _Note: some parameters, such as the window function used, have been statically s
 
 #### Format
 
-The results are saved as json with the following structure.
+The results are saved as in a json file that contains one json object per line,
+each line corresponds the a time time segment. Json object are formatted as follow:
+`{"timestamp": "1970-01-01T00:00:00+00:00", "column_1": values, ..., "column_N": values}`.
+
 
 #### FeatureEngine-benchmark results
 
-FeatureEngine-benchmark save its results using spark's default json writter which create a folder and puts as many json files
-as partitions of the results inside Spark.
-All results
+FeatureEngine-benchmark save its results using spark's default json writter.
