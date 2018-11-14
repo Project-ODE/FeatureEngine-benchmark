@@ -23,19 +23,14 @@ $SPARK_HOME/bin/spark-submit --class org.apache.spark.examples.SparkPi $SPARK_HO
 # Return to project' root directory
 cd ..
 
-# Create a pythonic environment to run python tests and cross-validate results from all benchmarks
-# downloaded packages are cached using a volume
-# Once all the results have been generated, they will be loaded in pyspark
+# Create a python environment to run python benchmark on test data
+# and cross-validate results from all benchmarks.
+# Downloaded packages are cached using travis' cache.
+# Once all the results have been generated, they will be loaded in this python environment
 # for cross-validation (ie ensure that all workflows compute the same thing)
 docker run -it --rm -v $HOME/.local/lib/python3.7:/root/.local/lib/python3.7\
   -v $(pwd):/root/project\
-  -v $SPARK_HOME:/root/spark:ro\
-  python:3.7 /bin/sh -c "apt update && apt install -y libsndfile1-dev openjdk-8-jre-headless &&\
-    cd /root/project/Python-benchmark-workflow &&\
-    pip3 install --user -r requirements.txt &&\
-    python3 main.py &&\
-    /root/spark/bin/spark-submit /root/spark/examples/src/main/python/pi.py
-    "
+  python:3.7 /bin/sh -c "apt update && apt install -y libsndfile1-dev"
 
 
 # Either travis (uid=2000) or user's uid
