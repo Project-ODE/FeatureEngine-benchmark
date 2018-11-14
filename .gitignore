@@ -4,7 +4,7 @@
 
 # ignore results expect matlab's that needs to be stored
 resources/results/python*
-resources/results/feature_engine*
+resourcesresults/feature_engine*
 
 *.pyc
 __pycache__
@@ -17,6 +17,5 @@ __pycache__
 target
 project/target
 spark-warehouse
-metastore_db
 .idea
 

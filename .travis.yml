@@ -1,22 +1,29 @@
-# Run using docker, not a VM
-sudo: false
+dist: trusty
+sudo: required
 
-# Cache sbt downloaded packages
+# Cache sbt & python downloaded packages
 cache:
   directories:
     - $HOME/.sbt
+    - $HOME/.local/lib/python3.7
+    - $HOME/spark
 
-# Now the actual core of the script
+# Set scala as base language for Spark to be run on the VM
 language: scala
+
+# Use docker to run python benchmarks and compare benchmark result files
+services:
+  - docker
 
 scala:
   - 2.11.12
 
-script:
-  - cd FeatureEngine-benchmark
-  - sbt compile
-  - sbt test
-  - sbt scalastyle
+before_install:
+  # if spark is not present, download it and put it in spark's cache directory
+  - if [ ! -e $HOME/spark/spark-2.4.0-bin-hadoop2.7 ]; then curl http://apache.mirrors.ovh.net/ftp.apache.org/dist/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz > $HOME/spark.tgz && tar -C $HOME/spark -xf $HOME/spark.tgz; fi
+  - docker pull python:3.7
+
+script: "run-tests.sh"
 
 # Send notifs to slack
 notifications:
