@@ -6,5 +6,6 @@ used to measure python performance.
 ## Versions
 
 Currently, the following version are implemented:
--_vanilla_ - simplest implementation of the workflow that doesn't parallelize
-nor distribute conputation and has multiple limitations.
+
++ _vanilla_ - simplest implementation of the workflow that doesnt't parallelize
+nor distribute computation. Files are processed sequentially.
