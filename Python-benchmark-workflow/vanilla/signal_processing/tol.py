@@ -29,6 +29,7 @@ import numpy as np
 #   toc: third octave center
 #   tob: third octave band
 
+
 class TOL:
     """
     Class computing TOL
@@ -37,8 +38,8 @@ class TOL:
 
         if nfft is not int(sample_rate):
             Exception(
-                "Incorrect fft-computation window size ({}) for TOL (should be higher than {})"
-                .format(nfft, sample_rate)
+                "Incorrect fft-computation window size ({})".format(nfft)
+                + "for TOL (should be higher than {})".format(sample_rate)
             )
 
         self.lower_limit = 1.0
@@ -48,36 +49,51 @@ class TOL:
         if low_freq is None:
             self.low_freq = self.lower_limit
         elif low_freq < self.lower_limit:
-            Exception("Incorrect low_freq ({}) for TOL (must be higher than {})"
-                      .format(low_freq, self.lower_limit))
+            Exception(
+                "Incorrect low_freq ({}) for TOL".format(low_freq)
+                + "(lower than lower_limit{})".format(self.lower_limit)
+            )
         elif high_freq is not None and low_freq > high_freq:
-            Exception("Incorrect low_freq ({}) for TOL (must be lower than high_freq {}"
-                      .format(low_freq, high_freq))
+            Exception(
+                "Incorrect low_freq ({}) for TOL".format(low_freq)
+                + "(higher than high_freq {}".format(high_freq)
+            )
         elif high_freq is None and low_freq > high_freq:
-            Exception("Incorrect low_freq ({}) for TOL (must be lower than upper_limit {}"
-                      .format(low_freq, self.upper_limit))
+            Exception(
+                "Incorrect low_freq ({}) for TOL".format(low_freq)
+                + "(higher than upper_limit {}".format(self.upper_limit)
+            )
         else:
             self.low_freq = low_freq
 
         if high_freq is None:
             self.high_freq = self.upper_limit
         elif high_freq > self.upper_limit:
-            Exception("Incorrect high_freq ({}) for TOL (must be lower than upper_limit {})"
-                      .format(high_freq, self.upper_limit))
+            Exception(
+                "Incorrect high_freq ({}) for TOL".format(high_freq)
+                + "(higher than upper_limit {})".format(self.upper_limit))
         elif low_freq is not None and high_freq < low_freq:
-            Exception("Incorrect high_freq ({}) for TOL (must be higher than low_freq {})"
-                      .format(high_freq, low_freq))
+            Exception(
+                "Incorrect high_freq ({}) for TOL".format(low_freq)
+                + "(lower than low_freq {})".format(high_freq)
+            )
         elif low_freq is None and high_freq < self.lower_limit:
-            Exception("Incorrect high_freq ({}) for TOL (must be higher than lower_limit {})"
-                      .format(high_freq, self.lower_limit))
+            Exception(
+                "Incorrect high_freq ({}) for TOL".format(high_freq)
+                + "(lower than lower_limit {})".format(self.lower_limit)
+            )
         else:
             self.high_freq = high_freq
 
-
         # when wrong low_freq, high_freq are given,
         # computation falls back to default values
-        if not self.lower_limit <= self.low_freq < self.high_freq <= self.upper_limit:
-            Exception("Unexpected exception occurred - wrong parameters were given to TOL")
+        if not self.lower_limit <= self.low_freq\
+                < self.high_freq <= self.upper_limit:
+
+            Exception(
+                "Unexpected exception occurred - "
+                + "wrong parameters were given to TOL"
+            )
 
         self.sample_rate = sample_rate
         self.nfft = nfft
@@ -88,8 +104,9 @@ class TOL:
     def _compute_tob_indices(self):
         max_third_octave_index = floor(10 * log10(self.upper_limit))
 
-        tob_center_freqs = np.power(10, np.arange(0, max_third_octave_index + 1) / 10)
-
+        tob_center_freqs = np.power(
+            10, np.arange(0, max_third_octave_index + 1) / 10
+        )
 
         all_tob = np.array([
             _tob_bounds_from_toc(toc_freq) for toc_freq in tob_center_freqs
@@ -100,7 +117,6 @@ class TOL:
             if self.low_freq <= tob[1] < self.upper_limit
             and tob[0] < self.high_freq
         ])
-
 
         return np.array([self._bound_to_index(bound) for bound in tob_bounds])
 

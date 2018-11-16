@@ -50,10 +50,12 @@ class SoundHandler:
     def read(self):
         """
         Method reading the sound file specified by the class arguments.
-        :return: A tuple containing the content of the soundfile as a numpy.array and the
-            sounds' sample rate.
+        :return: A tuple containing the content of the soundfile as a
+            numpy.array and the sounds' sample rate.
         """
-        sound_file = soundfile.SoundFile(os.path.join(self.wav_file_location, self.file_name))
+        sound_file = soundfile.SoundFile(os.path.join(
+            self.wav_file_location, self.file_name
+        ))
 
         assert sound_file.samplerate == self.sample_rate
         assert sound_file.channels == self.n_channels

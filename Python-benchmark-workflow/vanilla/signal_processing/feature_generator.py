@@ -57,12 +57,17 @@ class FeatureGenerator:
             self.high_freq = 0.4 * self.sample_rate
 
         if segment_size < sample_rate:
-            Exception(
-                "Incorrect segment size ({}) for feature generation".format(segment_size)
-                + "(should be higher than sample rate ({}) for TOL computation".format(sample_rate)
+            raise Exception(
+                "Incorrect segment size ({}) for feature generation"
+                .format(segment_size)
+                + "(lower sample rate ({}) for TOL computation"
+                .format(sample_rate)
             )
 
-        self.tol_class = TOL(self.sample_rate, int(self.sample_rate), self.low_freq, self.high_freq)
+        self.tol_class = TOL(
+            self.sample_rate, int(self.sample_rate),
+            self.low_freq, self.high_freq
+        )
 
         self.results = {}
 
@@ -78,7 +83,8 @@ class FeatureGenerator:
         n_windows = initial_shape[1]
         feature_size = initial_shape[0]
 
-        value_as_scala_format = numpy.zeros((n_windows, 2*feature_size), dtype=float)
+        value_as_scala_format = numpy.zeros(
+            (n_windows, 2*feature_size), dtype=float)
         value_as_complex = result_value.transpose()
 
         for i in range(n_windows):
@@ -95,28 +101,45 @@ class FeatureGenerator:
         sound, sample_rate = self.sound_handler.read()
 
         if sample_rate != self.sample_rate:
-            raise Exception("The given sampling rate doesn't match the one read")
+            raise Exception(
+                "The given sampling rate doesn't match the one read"
+            )
 
         calibrated_sound = sound / 10 ** (self.calibration_factor / 20)
 
         n_segments = sound.shape[0] // self.segment_size
 
-        segmented_sound = numpy.split(calibrated_sound[:self.segment_size * n_segments], n_segments)
+        segmented_sound = numpy.split(
+            calibrated_sound[:self.segment_size * n_segments], n_segments
+        )
 
         results = []
 
         for i_segment in range(n_segments):
             welch = scipy.signal.welch(
-                x=segmented_sound[i_segment], fs=self.sample_rate, window=self.window_function,
-                detrend=False, noverlap=self.window_overlap,
-                nperseg=self.window_size, nfft=self.nfft, return_onesided=True,
-                scaling='density', axis=-1
+                x=segmented_sound[i_segment],
+                fs=self.sample_rate,
+                nperseg=self.window_size,
+                noverlap=self.window_overlap,
+                window=self.window_function,
+                nfft=self.nfft,
+                detrend=False,
+                return_onesided=True,
+                scaling='density',
+                axis=-1
             )[1]
 
             psd = scipy.signal.spectrogram(
-                x=segmented_sound[i_segment], fs=self.sample_rate, window=self.window_function,
-                detrend=False, nperseg=int(self.sample_rate), noverlap=0,
-                nfft=int(self.sample_rate), scaling="density", return_onesided=True, axis=-1
+                x=segmented_sound[i_segment],
+                fs=self.sample_rate,
+                window=self.window_function,
+                nperseg=int(self.sample_rate),
+                noverlap=0,
+                nfft=int(self.sample_rate),
+                scaling="density",
+                detrend=False,
+                return_onesided=True,
+                axis=-1
             )[2].T
 
             tols = numpy.zeros((psd.shape[0], self.tol_class.tob_size))
@@ -131,7 +154,8 @@ class FeatureGenerator:
             ])
 
             timestamp = datetime.fromtimestamp(
-                self.timestamp.timestamp() + i_segment * (self.segment_size / self.sample_rate),
+                self.timestamp.timestamp()
+                + i_segment * (self.segment_size / self.sample_rate),
                 tz=timezone.utc
             ).isoformat()
 
@@ -142,4 +166,6 @@ class FeatureGenerator:
                 numpy.array([spl])
             ))
 
-        return pandas.DataFrame(results, columns=("timestamp", "welch", "tol", "spl"))
+        return pandas.DataFrame(
+            results, columns=("timestamp", "welch", "tol", "spl")
+        )

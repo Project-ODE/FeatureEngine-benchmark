@@ -50,13 +50,15 @@ NFFT = 256
 WINDOW_OVERLAP = 128
 
 for wav_file in FILES_TO_PROCESSS:
-    sound_handler = SoundHandler(wav_file["name"], WAV_FILES_LOCATION,
-                                 wav_file["wav_bits"], wav_file["n_samples"],
-                                 wav_file["sample_rate"], wav_file["n_channels"])
+    sound_handler = SoundHandler(
+        wav_file["name"], WAV_FILES_LOCATION,
+        wav_file["wav_bits"], wav_file["n_samples"],
+        wav_file["sample_rate"], wav_file["n_channels"])
 
-    feature_generator = FeatureGenerator(sound_handler, wav_file["timestamp"],
-                                         wav_file["sample_rate"], CALIBRATION_FACTOR,
-                                         SEGMENT_SIZE, WINDOW_SIZE, WINDOW_OVERLAP, NFFT)
+    feature_generator = FeatureGenerator(
+        sound_handler, wav_file["timestamp"],
+        wav_file["sample_rate"], CALIBRATION_FACTOR,
+        SEGMENT_SIZE, WINDOW_SIZE, WINDOW_OVERLAP, NFFT)
 
     results = feature_generator.generate()
 
@@ -64,7 +66,8 @@ for wav_file in FILES_TO_PROCESSS:
     # (sound's name follow convention described in test/resources/README.md)
     sound_id = wav_file["name"].split("_")[0]
 
-    resultsHandler = ResultsHandler(sound_id, RESULTS_DESTINATION, SEGMENT_SIZE,
-                                    WINDOW_SIZE, WINDOW_OVERLAP, NFFT)
+    resultsHandler = ResultsHandler(
+        sound_id, RESULTS_DESTINATION, SEGMENT_SIZE,
+        WINDOW_SIZE, WINDOW_OVERLAP, NFFT)
 
     resultsHandler.write(results)

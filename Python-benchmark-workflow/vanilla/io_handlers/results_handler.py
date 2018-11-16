@@ -56,7 +56,7 @@ class ResultsHandler:
         Function writing the given results inside a json file named after the
         parameters and the version of the benchmark used to generate them.
 
-        :param results: The acoustic features to be saved as a pandas' DataFrame
+        :param results: The acoustic features to be saved as a pandas DataFrame
         :return: None
         """
         if not os.path.exists(self.results_destination):
