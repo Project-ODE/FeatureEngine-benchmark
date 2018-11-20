@@ -47,7 +47,7 @@ class ResultsHandler:
         self.window_overlap = window_overlap
 
     def __str__(self):
-        return "{}-{}-{}-{}-{}"\
+        return "{}_{}_{}_{}_{}"\
             .format(self.wav_file_id, self.segment_size,
                     self.window_size, self.window_overlap, self.nfft)
 
