@@ -65,4 +65,21 @@ each line corresponds the a time time segment. Json object are formatted as foll
 
 #### FeatureEngine-benchmark results
 
-FeatureEngine-benchmark save its results using spark's default json writter.
+FeatureEngine-benchmark save its results using spark's default json writter
+which write results using the same format as the one described above except
+that it creates one json file per partition instead of one per file.
+
+The `feature_engine_benchmark` folder will contain sub-folders that
+corresponds to a a run of FeatureEngine-benchmark and named as follow:
+
+```bash
+DATASETID_SEGMENTSIZE_WINDOWSIZE_WINDOWOVERLAP_NFFT
+```
+
+With:
+
++ `DATASETID` - An identifier of the dataset used to generate the results (eg `example` or `spm500files`)
++ `SEGMENTSIZE` - The size of the first level of segmentation for acoustic features computation (in samples)
++ `WINDOWSIZE` - The size of the second level of segmentation for acoustic features computation (in samples)
++ `WINDOWOVERLAP` - The overlap of the second level of segmentation for acoustic features computation (in samples)
++ `NFFT` - The size of the fft-computation window
