@@ -34,7 +34,7 @@ WAV_FILES_LOCATION = RESOURCES_DIR + "/sounds"
 RESULTS_DESTINATION = RESOURCES_DIR + "/results/python_vanilla"
 METADATA_FILE_PATH = RESOURCES_DIR + "/metadata/Example_metadata.csv"
 
-FILES_TO_PROCESSS = [{
+FILES_TO_PROCESS = [{
     "name": file_metadata[0],
     "timestamp": parse(file_metadata[1]),
     "sample_rate": 1500.0,
@@ -49,11 +49,14 @@ WINDOW_SIZE = 256
 NFFT = 256
 WINDOW_OVERLAP = 128
 
-for wav_file in FILES_TO_PROCESSS:
+for wav_file in FILES_TO_PROCESS:
     sound_handler = SoundHandler(
-        wav_file["name"], WAV_FILES_LOCATION,
-        wav_file["wav_bits"], wav_file["n_samples"],
-        wav_file["sample_rate"], wav_file["n_channels"])
+        WAV_FILES_LOCATION,
+        wav_file["name"],
+        wav_file["wav_bits"],
+        wav_file["sample_rate"],
+        wav_file["n_channels"],
+        wav_file["n_samples"])
 
     feature_generator = FeatureGenerator(
         sound_handler, wav_file["timestamp"],

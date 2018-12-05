@@ -30,7 +30,12 @@ cd ..
 # for cross-validation (ie ensure that all workflows compute the same thing)
 docker run -it --rm -v $HOME/.local/lib/python3.7:/root/.local/lib/python3.7\
   -v $(pwd):/root/project\
-  python:3.7 /bin/sh -c "apt update && apt install -y libsndfile1-dev"
+  python:3.7 /bin/sh -c "apt update && apt install -y libsndfile1-dev\
+  cd /root/project/Python-benchmark-workflow &&\
+  pip install --user requirements.txt &&\
+  cd vanilla &&\
+  python example.py
+  "
 
 
 # Either travis (uid=2000) or user's uid
