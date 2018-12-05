@@ -32,12 +32,12 @@ class SoundHandler:
     """
     def __init__(
             self,
-            file_name,
             wav_file_location,
+            file_name,
             wav_bits,
-            n_samples,
             sample_rate,
-            n_channels
+            n_channels,
+            n_samples=None,
     ):
 
         self.wav_file_location = wav_file_location
@@ -60,8 +60,10 @@ class SoundHandler:
         assert sound_file.samplerate == self.sample_rate
         assert sound_file.channels == self.n_channels
         assert sound_file.format == "WAV"
-        assert sound_file.frames == self.n_samples
         assert sound_file.subtype == "PCM_{}".format(self.wav_bits)
+
+        if self.n_samples is not None:
+            assert sound_file.frames == self.n_samples
 
         sig = sound_file.read()
         sample_rate = sound_file.samplerate
