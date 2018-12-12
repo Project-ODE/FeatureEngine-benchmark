@@ -1,0 +1,7 @@
+# Dependencies for python benchmark vanilla version
+
+pylint
+scipy
+numpy
+pandas
+soundfile
