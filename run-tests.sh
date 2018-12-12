@@ -30,9 +30,11 @@ docker run -it --rm -v $HOME/.local/lib/python3.7:/root/.local/lib/python3.7\
   "
   apt update && apt install -y libsndfile1-dev &&\
   cd /root/project/Python-benchmark-workflow &&\
-  pip install --user -r requirements.txt &&\
+  pip3 install --user -r requirements.txt &&\
   cd vanilla &&\
-  python example.py
+  python3 example.py &&\
+  cd ../../test/python &&\
+  python3 test_Example_1500_256_128_256.py
   "
 
 
