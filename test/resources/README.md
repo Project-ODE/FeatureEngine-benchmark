@@ -17,7 +17,7 @@ Sub-folders are as follow:
       + `RUNID_X` - contains the results for a run of `LANGUAGE_VERSION` on a data set using a set of parameters.
         + `SOUNDID_X.json` - The results of the benchmark run on the sound identified by `SOUNDID_X`.
 
-Currently, supported languages are python and matlab. Both have a `vanilla` version, python also has a `noBB` (no black boxes) version.
+Currently, supported languages are `python` and `matlab`. Both have a `vanilla` version, `python` also has a `noBB` (no black boxes) version.
 
 ## Benchmark run
 
