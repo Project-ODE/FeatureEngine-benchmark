@@ -3,8 +3,8 @@
 *.m~
 
 # ignore results expect matlab's that needs to be stored
-resources/results/python*
-resources/results/feature_engine*
+test/resources/results/python*
+test/resources/results/feature_engine_benchmark
 
 *.pyc
 __pycache__
