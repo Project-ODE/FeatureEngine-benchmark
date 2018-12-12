@@ -90,18 +90,6 @@ object Example {
     val calibratedRecords: RDD[Record] = records.mapValues(chan => chan.map(calibrationClass.compute))
 
 
-    val tolWorkflow = new TolWorkflow(
-      spark,
-      recordSizeInSec,
-      lowFreq,
-      highFreq
-    )
-
-    val tols = tolWorkflow(
-      calibratedRecords,
-      soundSamplingRate
-    )
-
     val welchSplWorkflow = new WelchSplWorkflow(
       spark,
       recordSizeInSec,
@@ -114,6 +102,19 @@ object Example {
       calibratedRecords,
       soundSamplingRate
     )
+
+    val tolWorkflow = new TolWorkflow(
+      spark,
+      recordSizeInSec,
+      lowFreq,
+      highFreq
+    )
+
+    val tols = tolWorkflow(
+      calibratedRecords,
+      soundSamplingRate
+    )
+
 
     import spark.implicits._
 
