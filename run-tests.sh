@@ -13,12 +13,8 @@ sbt compile
 sbt assembly
 sbt scalastyle
 
-# Test that spark works - temporary, will be removed once a full version of FeatureEngine-benchmark
-# will be added to the project
-$SPARK_HOME/bin/spark-submit --class org.apache.spark.examples.SparkPi $SPARK_HOME/examples/jars/spark-examples_2.11-2.4.0.jar
-
 # Run benchmark on test file in order to generate workflow results.
-# $SPARK_HOME/bin/spark-submit target/scala-2.11/FeatureEngine-benchmark-assembly-0.1.jar
+$SPARK_HOME/bin/spark-submit target/scala-2.11/FeatureEngine-benchmark-assembly-0.1.jar
 
 # Return to project' root directory
 cd ..
