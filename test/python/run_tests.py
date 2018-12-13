@@ -40,11 +40,11 @@ def run_tests(results):
         df_a = results[result_tuple[0]]
         df_b = results[result_tuple[1]]
 
-        print("    * results should contains the same number of features " +
+        print("    * results should contain the same number of features " +
             "computed on the same number of segments")
         assert df_a.shape == df_b.shape
 
-        print("    * results should the same timestamps")
+        print("    * results should contain the same timestamps")
         df_a_ts = df_a.sort_values("timestamp").timestamp.values
         df_b_ts = df_b.sort_values("timestamp").timestamp.values
         assert (df_a_ts == df_b_ts).all()

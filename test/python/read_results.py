@@ -26,9 +26,8 @@ import os
 import glob
 import pandas as pd
 
-def read(results_root_dir, run_id):
+def read(results_root_dir, run_id, version_list):
     results = {}
-    version_list = os.listdir(results_root_dir)
 
     for version in version_list:
         results[version] = _read_json_files(results_root_dir + "/" + version + "/" + run_id)

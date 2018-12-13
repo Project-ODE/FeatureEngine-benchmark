@@ -34,8 +34,8 @@ from run_tests import run_tests
 # constants
 N_CHANNELS = 1
 
-
 RESULTS_ROOT_DIR = "../resources/results"
+VERSION_LIST = ["feature_engine_benchmark", "python_vanilla"]
 
 DATASET_ID = "Example"
 SOUND_IDS = ["Example0", "Example1"]
@@ -50,7 +50,7 @@ RUN_ID = DATASET_ID + "_" +"_".join(
     [str(p) for p in [SEGMENT_SIZE, WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
 
 if __name__ == "__main__":
-    results_dict_dfs = read_results.read(RESULTS_ROOT_DIR, RUN_ID)
+    results_dict_dfs = read_results.read(RESULTS_ROOT_DIR, RUN_ID, VERSION_LIST)
 
     print("Beginning tests on results:")
 
