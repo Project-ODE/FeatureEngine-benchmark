@@ -28,11 +28,21 @@ from dateutil.parser import parse
 from signal_processing import FeatureGenerator
 from io_handlers import SoundHandler, ResultsHandler
 
+DATASET_ID = "Example"
 
 RESOURCES_DIR = "../../test/resources"
 WAV_FILES_LOCATION = RESOURCES_DIR + "/sounds"
-RESULTS_DESTINATION = RESOURCES_DIR + "/results/python_vanilla"
 METADATA_FILE_PATH = RESOURCES_DIR + "/metadata/Example_metadata.csv"
+
+CALIBRATION_FACTOR = 0.0
+SEGMENT_SIZE = 1500
+WINDOW_SIZE = 256
+NFFT = 256
+WINDOW_OVERLAP = 128
+
+RUN_ID = DATASET_ID + "_" +"_".join(
+    [str(p) for p in [SEGMENT_SIZE, WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
+RESULTS_DESTINATION = RESOURCES_DIR + "/results/python_vanilla/" + RUN_ID
 
 FILES_TO_PROCESS = [{
     "name": file_metadata[0],
@@ -43,11 +53,6 @@ FILES_TO_PROCESS = [{
     "n_channels": 1
 } for file_metadata in pd.read_csv(METADATA_FILE_PATH).values]
 
-CALIBRATION_FACTOR = 0.0
-SEGMENT_SIZE = 1500
-WINDOW_SIZE = 256
-NFFT = 256
-WINDOW_OVERLAP = 128
 
 for wav_file in FILES_TO_PROCESS:
     sound_handler = SoundHandler(

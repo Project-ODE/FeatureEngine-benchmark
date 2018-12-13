@@ -48,9 +48,11 @@ object Example {
     val resourcesDir = new File("../test/resources")
     val metadataFile = new File("../test/resources/metadata/Example_metadata.csv")
 
+
     // Signal processing parameters
-    val recordSizeInSec = 1.0f
     val soundSamplingRate = 1500.0f
+    val recordSizeInSec = 1.0f
+    val recordSizeInFrame = (soundSamplingRate * recordSizeInSec).toInt
     val windowSize = 256
     val windowOverlap = 128
     val nfft = 256
@@ -69,8 +71,10 @@ object Example {
     val soundChannels = 1
     val soundSampleSizeInBits = 16
 
+    val runId = s"Example_${recordSizeInFrame}_${windowSize}_${windowOverlap}_${nfft}"
+
     val resultsDestination = resourcesDir.getCanonicalFile.toURI.toString +
-      "/results/feature_engine_benchmark"
+      "/results/feature_engine_benchmark/" + runId
 
     val hadoopWavReader = new HadoopWavReader(
       spark,
