@@ -46,7 +46,7 @@ object Example {
     val spark = SparkSession.builder.getOrCreate()
 
     val resourcesDir = new File("../test/resources")
-    val metadataFile = new File("../test/resources/metadata/Example_metadata.csv")
+    val metadataFile = new File("../test/resources/wavFilesMetadata/Example_metadata.csv")
 
 
     // Signal processing parameters
@@ -56,15 +56,15 @@ object Example {
     val windowSize = 256
     val windowOverlap = 128
     val nfft = 256
-    val lowFreq = Some(0.2 * soundSamplingRate)
-    val highFreq = Some(0.4 * soundSamplingRate)
+    val lowFreqTOL = Some(0.2 * soundSamplingRate)
+    val highFreqTOL = Some(0.4 * soundSamplingRate)
 
     // Sound parameters
     val soundsPath = resourcesDir.getCanonicalFile.toURI.toString + "/sounds"
-    // read metadata & drop header
-    val metadata = Source.fromFile(metadataFile).mkString.split("\n").drop(1).toList
-    val soundsNameAndStartDate = metadata.map(fileMetadata => {
-      val metadataArray = fileMetadata.split(",")
+    // read wavFilesMetadata & drop header
+    val wavFilesMetadata = Source.fromFile(metadataFile).mkString.split("\n").drop(1).toList
+    val soundsNameAndStartDate = wavFilesMetadata.map(wavFileMetadata => {
+      val metadataArray = wavFileMetadata.split(",")
       (metadataArray(0), new DateTime(metadataArray(1), DateTimeZone.UTC))
     })
 
@@ -93,7 +93,6 @@ object Example {
 
     val calibratedRecords: RDD[Record] = records.mapValues(chan => chan.map(calibrationClass.compute))
 
-
     val welchSplWorkflow = new WelchSplWorkflow(
       spark,
       recordSizeInSec,
@@ -110,15 +109,14 @@ object Example {
     val tolWorkflow = new TolWorkflow(
       spark,
       recordSizeInSec,
-      lowFreq,
-      highFreq
+      lowFreqTOL,
+      highFreqTOL
     )
 
     val tols = tolWorkflow(
       calibratedRecords,
       soundSamplingRate
     )
-
 
     import spark.implicits._
 
