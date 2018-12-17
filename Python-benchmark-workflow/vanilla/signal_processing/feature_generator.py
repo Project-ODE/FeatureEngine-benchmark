@@ -98,16 +98,16 @@ class FeatureGenerator:
         Function generation pre-defined features with the specified parameters
         :return: A dictionary containing the results
         """
-        sound, sample_rate = self.sound_handler.read()
+        raw_sound, sample_rate = self.sound_handler.read()
 
         if sample_rate != self.sample_rate:
             raise Exception(
                 "The given sampling rate doesn't match the one read"
             )
 
-        calibrated_sound = sound / 10 ** (self.calibration_factor / 20)
+        calibrated_sound = raw_sound / 10 ** (self.calibration_factor / 20)
 
-        n_segments = sound.shape[0] // self.segment_size
+        n_segments = raw_sound.shape[0] // self.segment_size
 
         segmented_sound = numpy.split(
             calibrated_sound[:self.segment_size * n_segments], n_segments

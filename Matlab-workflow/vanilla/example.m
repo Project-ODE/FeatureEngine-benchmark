@@ -16,30 +16,29 @@
 % Main contributors: Julien Bonnel, Dorian Cazau, Paul Nguyen HD
 %   Alexandre Degurse
 
+
 %% Example script of the benchmark
 % It run on the test data located at FeatureEngine-benchmark/test/resources
 % to run it in cli use: `matlab -nodisplay -nosplash -nodesktop -r "example"`
 function [] = example()
 
 % clear everything, for test only.
-% it also deletes any arguments passed to the script
+% it also deletes any arguments passed to the script !
 clc
 close all
 clear
 
 
-timeToBegin = tic;
+tStart = tic;
 
 %% include source files containing program's functions
 
 addpath(genpath(strcat('.', filesep, 'signal_processing', filesep)));
 
-
 %% init parameters
 
 % sound sampling rate
-fs = 1500.0;
-
+sampleRate = 1500.0;
 % linear scale
 calibrationFactor = 0.0;
 % long window, in seconds
@@ -54,7 +53,7 @@ windowOverlap = 128;
 lowFreqTOL = 0.2 * 1500;
 highFreqTOL = 0.4 * 1500;
 
-segmentSize = fix(fs * segmentDuration);
+segmentSize = fix(sampleRate * segmentDuration);
 
 windowFunction = hamming(windowSize, 'periodic'); % window used for windowing
 
@@ -62,13 +61,13 @@ runId = char(strcat(...
     "Example_", string(segmentSize), "_", string(windowSize),...
     "_", string(windowOverlap), "_", string(nfft)));
 
-%% read metadata
+%% read wavFilesMetadata
 
 fid = fopen('../../test/resources/metadata/Example_metadata.csv');
 
-% metadata are not used but this line is needed to disregard it
-metadataHeader = textscan(fid,'%q %q', 1, 'delimiter', ',');
-metadata = textscan(fid,'%q %q','delimiter',',');
+% wavFilesMetadata are not used but this line is needed to disregard it
+wavFilesMetadataHeader = textscan(fid,'%q %q', 1, 'delimiter', ',');
+wavFilesMetadata = textscan(fid,'%q %q','delimiter',',');
 
 fclose(fid);
 
@@ -82,12 +81,10 @@ wavFilesLocation = strcat('..', filesep, '..', filesep, 'test', filesep,...
     'resources', filesep, 'sounds', filesep);
 
 wavFiles = struct(...
-    'name', string(metadata{1}),...
-    'fs', [1500, 1500],...
-    'date', string(metadata{2})...
+    'name', string(wavFilesMetadata{1}),...
+    'sampleRate', [1500, 1500],...
+    'timestamp', string(wavFilesMetadata{2})...
 );
-
-%% Check if
 
 if (exist(resultsLocation, 'dir') == 0)
     mkdir(resultsLocation);
@@ -97,14 +94,14 @@ end
 
 for iFile = 1 : length(wavFiles.name)
     startDateInMatlabTime = datenum(...
-        wavFiles.date(iFile),...
+        wavFiles.timestamp(iFile),...
         'yyyy-mm-ddTHH:MM:SSZ');
 
     startDateInUnixTimeMs = (startDateInMatlabTime - 719529) * 86400000;
 
     results = computeFeatures(...
         wavFilesLocation, char(wavFiles.name(iFile)), startDateInUnixTimeMs,...
-        wavFiles.fs(iFile), calibrationFactor,...
+        wavFiles.sampleRate(iFile), calibrationFactor,...
         segmentDuration, windowSize, windowOverlap, windowFunction,...
         nfft, lowFreqTOL, highFreqTOL);
 
@@ -129,9 +126,9 @@ end
 
 %% Compute elapsed time
 
-elapsetipeSoundscapeWorkflow = toc(timeToBegin);
+tEnd = toc(tStart);
 
-fprintf('Elapsed Time: %d\n', elapsetipeSoundscapeWorkflow);
+fprintf('Elapsed Time: %d\n', tEnd);
 fprintf('End of computations\n')
 
 end

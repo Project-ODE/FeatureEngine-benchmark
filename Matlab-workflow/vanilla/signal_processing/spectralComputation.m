@@ -24,9 +24,9 @@ function results = spectralComputation(...
     tolWindowFunction = hamming(fs, 'periodic');
 
     vWelch = welch(signal, fs, windowSize, windowOverlap, windowFunction, nfft);
-    
+
     vTol = tol(signal, fs, tolWindowFunction, lowFreq, highFreq);
-    
+
     spl = 10 * log10(sum(vWelch));
 
     results = struct(...

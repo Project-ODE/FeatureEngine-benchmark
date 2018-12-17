@@ -17,7 +17,7 @@
 %   Alexandre Degurse
 
 function results = computeFeatures(...
-    wavFileLocation, wavFileName, startDateInUnixTimeMs, fs,...
+    wavFileLocation, wavFileName, startDateInUnixTimeMs, sampleRate,...
     calibrationFactor, segmentDuration, windowSize,...
     windowOverlap, windowFunction, nfft, lowFreq, highFreq)
 
@@ -25,12 +25,12 @@ function results = computeFeatures(...
 
     % @TODO perform checks against expected infos
 
-    rawSignal = audioread(strcat(wavFileLocation, wavFileName), 'double');
+    rawSound = audioread(strcat(wavFileLocation, wavFileName), 'double');
 
-    calibratedSignal = rawSignal * (10 ^ (calibrationFactor / 20));
+    calibratedSignal = rawSound * (10 ^ (calibrationFactor / 20));
 
-    segmentSize = fix(segmentDuration * fs);
-    
+    segmentSize = fix(segmentDuration * sampleRate);
+
     nSegments = fix(wavInfo.TotalSamples / segmentSize);
 
     results = {};
@@ -39,25 +39,25 @@ function results = computeFeatures(...
     for iSegment = nSegments-1 : -1 : 0
         spectralResults = spectralComputation(...
             calibratedSignal(1 + iSegment*segmentSize : (iSegment+1) * segmentSize),...
-            fs, windowSize, windowOverlap, windowFunction, nfft,...
+            sampleRate, windowSize, windowOverlap, windowFunction, nfft,...
             lowFreq, highFreq);
-        
-        segmenTsInUnixMs = startDateInUnixTimeMs + 1000.0 * iSegment * (segmentSize / fs);
+
+        segmenTsInUnixMs = startDateInUnixTimeMs + 1000.0 * iSegment * (segmentSize / sampleRate);
         segmentTsInMatlabTime = segmenTsInUnixMs / 86400000 + 719529;
         segmentTimestamp = datestr(segmentTsInMatlabTime, 'yyyy-mm-ddTHH:MM:SS.FFFZ');
-        
+
         format long
-        
+
         % Convert results to json string to enforce json structure
         results(1 + iSegment).timestamp = strcat(segmentTimestamp);
-        
+
         results(1 + iSegment).welch = strcat(...
             '[', jsonencode(spectralResults.welch), ']'...
         );
         results(1 + iSegment).spl = strcat(...
             '[[', jsonencode(spectralResults.spl), ']]'...
         );
-    
+
         results(1 + iSegment).tol = strcat(...
             '[', jsonencode(spectralResults.tol), ']'...
         );
