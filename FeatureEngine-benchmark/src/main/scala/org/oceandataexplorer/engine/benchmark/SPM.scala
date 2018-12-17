@@ -38,22 +38,24 @@ import org.oceandataexplorer.engine.signalprocessing.SoundCalibration
 object SPM {
   /**
    * Function runnning benchmark workflow on SPM dataset
-   * @param args The arguments for the run. Two arguments (Ints) are expected:
-   * - nNodes: The number of datarmor nodes used in this run.
-   * - nFiles: The number of SPM wav files to be processed in this run.
+   * @param args The arguments for the run. Four arguments are expected:
+   * - nNodes: The number of datarmor nodes used in this run as a Int.
+   * - nFiles: The number of SPM wav files to be processed in this run as a Int.
+   * - inputBaseDir: The base directory containing the dataset as a String.
+   * - outputBaseDir: The base directory where results are written as a String.
    */
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder.getOrCreate()
 
-    // number of datarmor nodes used in this run
     val nNodes = args(0).toInt
-    // number of files to be processed in this run
     val nFiles = args(1).toInt
+    val inputBaseDir = args(2)
+    val outputBaseDir = args(3)
 
-    val inputBaseDir = new File("/home/datawork-alloha-ode/Datasets/SPM")
-    val wavDir = new File(inputBaseDir.getCanonicalFile + "/PAM/SPMAuralA2010")
-    val metadataFile = new File(inputBaseDir.getCanonicalFile + "/PAM/Metadata_SPMAuralA2010.csv")
-    val outputBaseDir = new File("/home/datawork-alloha-ode/benchmark")
+    val inputBaseDirFile = new File(inputBaseDir)
+    val wavDir = new File(inputBaseDirFile.getCanonicalFile + "/PAM/SPMAuralA2010")
+    val metadataFile = new File(inputBaseDirFile.getCanonicalFile + "/PAM/Metadata_SPMAuralA2010.csv")
+    val outputBaseDirFile = new File(outputBaseDir)
 
     // Signal processing parameters
     val recordSizeInSec = 1.0f
@@ -96,7 +98,7 @@ object SPM {
 
     val runId = s"Example_${recordSizeInFrame}_${windowSize}_${windowOverlap}_$nfft"
 
-    val resultsDestination = outputBaseDir.getCanonicalFile.toURI.toString +
+    val resultsDestination = outputBaseDirFile.getCanonicalFile.toURI.toString +
       s"/results/$nNodes/feature_engine_benchmark/" + runId
 
     val hadoopWavReader = new HadoopWavReader(
