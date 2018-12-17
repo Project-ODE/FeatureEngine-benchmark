@@ -38,7 +38,9 @@ import org.oceandataexplorer.engine.signalprocessing.SoundCalibration
 object SPM {
   /**
    * Function runnning benchmark workflow on SPM dataset
-   * @param args The arguments for the run
+   * @param args The arguments for the run. Two arguments (Ints) are expected:
+   * - nNodes: The number of datarmor nodes used in this run.
+   * - nFiles: The number of SPM wav files to be processed in this run.
    */
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder.getOrCreate()
@@ -48,9 +50,10 @@ object SPM {
     // number of files to be processed in this run
     val nFiles = args(1).toInt
 
-    val wavDir = new File("/home/datawork-alloha-ode/Datasets/SPM/PAM/SPMAuralA2010")
-    val resourcesDir = new File("/home/datawork-alloha-ode/benchmark")
-    val metadataFile = new File("/home/datawork-alloha-ode/Datasets/SPM/PAM/Metadata_SPMAuralA2010.csv")
+    val inputBaseDir = new File("/home/datawork-alloha-ode/Datasets/SPM")
+    val wavDir = new File(inputBaseDir.getCanonicalFile + "/PAM/SPMAuralA2010")
+    val metadataFile = new File(inputBaseDir.getCanonicalFile + "/PAM/Metadata_SPMAuralA2010.csv")
+    val outputBaseDir = new File("/home/datawork-alloha-ode/benchmark")
 
     // Signal processing parameters
     val recordSizeInSec = 1.0f
@@ -67,7 +70,15 @@ object SPM {
     val soundPath = wavDir.getCanonicalFile.toURI.toString
     val soundChannels = 1
     val soundSampleSizeInBits = 16
-    // read metadata & drop header
+
+    /** read metadata & drop header
+     * We're using the following fields of the metadata file:
+     *   - 0: the wav file name, eg "A32C0000.WAV"
+     *   - 9: the date on which the recording begins, eg "2010-04-12"
+     *   - 10: the time on which the recording begins, eg "12:41:23"
+     * For more information on the metadata file content see p39 of (french):
+     * http://www.multi-electronique.com/files/AURAL/user/AURAL-M2_MANUEL_D_UTILISATION.pdf
+     */
     val metadata = Source.fromFile(metadataFile).mkString.split("\n").drop(1).toList
 
     val soundsNameAndStartDate = metadata
