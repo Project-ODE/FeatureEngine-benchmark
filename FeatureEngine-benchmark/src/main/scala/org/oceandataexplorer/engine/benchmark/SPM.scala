@@ -72,7 +72,7 @@ object SPM {
     val soundSampleSizeInBits = 16
 
     /** read metadata & drop header
-     * We're using the following fields of the metadata file:
+     * We're using the following fields of the metadata file (semi-colon separated csv):
      *   - 0: the wav file name, eg "A32C0000.WAV"
      *   - 9: the date on which the recording begins, eg "2010-04-12"
      *   - 10: the time on which the recording begins, eg "12:41:23"
