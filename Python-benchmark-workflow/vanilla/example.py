@@ -44,7 +44,7 @@ RUN_ID = DATASET_ID + "_" +"_".join(
     [str(p) for p in [SEGMENT_SIZE, WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
 RESULTS_DESTINATION = RESOURCES_DIR + "/results/python_vanilla/" + RUN_ID
 
-FILES_TO_PROCESS = [{
+WAV_FILES = [{
     "name": file_metadata[0],
     "timestamp": parse(file_metadata[1]),
     "sample_rate": 1500.0,
@@ -54,7 +54,7 @@ FILES_TO_PROCESS = [{
 } for file_metadata in pd.read_csv(METADATA_FILE_PATH).values]
 
 
-for wav_file in FILES_TO_PROCESS:
+for wav_file in WAV_FILES:
     sound_handler = SoundHandler(
         WAV_FILES_LOCATION,
         wav_file["name"],
@@ -64,9 +64,14 @@ for wav_file in FILES_TO_PROCESS:
         wav_file["n_samples"])
 
     feature_generator = FeatureGenerator(
-        sound_handler, wav_file["timestamp"],
-        wav_file["sample_rate"], CALIBRATION_FACTOR,
-        SEGMENT_SIZE, WINDOW_SIZE, WINDOW_OVERLAP, NFFT)
+        sound_handler,
+        wav_file["timestamp"],
+        wav_file["sample_rate"],
+        CALIBRATION_FACTOR,
+        SEGMENT_SIZE,
+        WINDOW_SIZE,
+        WINDOW_OVERLAP,
+        NFFT)
 
     results = feature_generator.generate()
 
@@ -75,7 +80,11 @@ for wav_file in FILES_TO_PROCESS:
     sound_id = wav_file["name"].split("_")[0]
 
     resultsHandler = ResultsHandler(
-        sound_id, RESULTS_DESTINATION, SEGMENT_SIZE,
-        WINDOW_SIZE, WINDOW_OVERLAP, NFFT)
+        sound_id,
+        RESULTS_DESTINATION,
+        SEGMENT_SIZE,
+        WINDOW_SIZE,
+        WINDOW_OVERLAP,
+        NFFT)
 
     resultsHandler.write(results)

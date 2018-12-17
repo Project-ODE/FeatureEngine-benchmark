@@ -37,7 +37,7 @@ class SoundHandler:
             wav_bits,
             sample_rate,
             n_channels,
-            n_samples=None,
+            n_samples=None
     ):
 
         self.wav_file_location = wav_file_location

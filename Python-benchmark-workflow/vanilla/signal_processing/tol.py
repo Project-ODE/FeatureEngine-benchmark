@@ -34,7 +34,7 @@ class TOL:
     """
     Class computing TOL
     """
-    def __init__(self, sample_rate, nfft, low_freq=None, high_freq=None):
+    def __init__(self, sample_rate, nfft, low_freq_tol=None, high_freq_tol=None):
 
         if nfft is not int(sample_rate):
             Exception(
@@ -44,51 +44,51 @@ class TOL:
 
         self.lower_limit = 1.0
         self.upper_limit = max(sample_rate / 2.0,
-                               high_freq if high_freq is not None else 0.0)
+                               high_freq_tol if high_freq_tol is not None else 0.0)
 
-        if low_freq is None:
-            self.low_freq = self.lower_limit
-        elif low_freq < self.lower_limit:
+        if low_freq_tol is None:
+            self.low_freq_tol = self.lower_limit
+        elif low_freq_tol < self.lower_limit:
             Exception(
-                "Incorrect low_freq ({}) for TOL".format(low_freq)
+                "Incorrect low_freq_tol ({}) for TOL".format(low_freq_tol)
                 + "(lower than lower_limit{})".format(self.lower_limit)
             )
-        elif high_freq is not None and low_freq > high_freq:
+        elif high_freq_tol is not None and low_freq_tol > high_freq_tol:
             Exception(
-                "Incorrect low_freq ({}) for TOL".format(low_freq)
-                + "(higher than high_freq {}".format(high_freq)
+                "Incorrect low_freq_tol ({}) for TOL".format(low_freq_tol)
+                + "(higher than high_freq_tol {}".format(high_freq_tol)
             )
-        elif high_freq is None and low_freq > high_freq:
+        elif high_freq_tol is None and low_freq_tol > high_freq_tol:
             Exception(
-                "Incorrect low_freq ({}) for TOL".format(low_freq)
+                "Incorrect low_freq_tol ({}) for TOL".format(low_freq_tol)
                 + "(higher than upper_limit {}".format(self.upper_limit)
             )
         else:
-            self.low_freq = low_freq
+            self.low_freq_tol = low_freq_tol
 
-        if high_freq is None:
-            self.high_freq = self.upper_limit
-        elif high_freq > self.upper_limit:
+        if high_freq_tol is None:
+            self.high_freq_tol = self.upper_limit
+        elif high_freq_tol > self.upper_limit:
             Exception(
-                "Incorrect high_freq ({}) for TOL".format(high_freq)
+                "Incorrect high_freq_tol ({}) for TOL".format(high_freq_tol)
                 + "(higher than upper_limit {})".format(self.upper_limit))
-        elif low_freq is not None and high_freq < low_freq:
+        elif low_freq_tol is not None and high_freq_tol < low_freq_tol:
             Exception(
-                "Incorrect high_freq ({}) for TOL".format(low_freq)
-                + "(lower than low_freq {})".format(high_freq)
+                "Incorrect high_freq_tol ({}) for TOL".format(low_freq_tol)
+                + "(lower than low_freq_tol {})".format(high_freq_tol)
             )
-        elif low_freq is None and high_freq < self.lower_limit:
+        elif low_freq_tol is None and high_freq_tol < self.lower_limit:
             Exception(
-                "Incorrect high_freq ({}) for TOL".format(high_freq)
+                "Incorrect high_freq_tol ({}) for TOL".format(high_freq_tol)
                 + "(lower than lower_limit {})".format(self.lower_limit)
             )
         else:
-            self.high_freq = high_freq
+            self.high_freq_tol = high_freq_tol
 
-        # when wrong low_freq, high_freq are given,
+        # when wrong low_freq_tol, high_freq_tol are given,
         # computation falls back to default values
-        if not self.lower_limit <= self.low_freq\
-                < self.high_freq <= self.upper_limit:
+        if not self.lower_limit <= self.low_freq_tol\
+                < self.high_freq_tol <= self.upper_limit:
 
             Exception(
                 "Unexpected exception occurred - "
@@ -114,8 +114,8 @@ class TOL:
 
         tob_bounds = np.array([
             tob for tob in all_tob
-            if self.low_freq <= tob[1] < self.upper_limit
-            and tob[0] < self.high_freq
+            if self.low_freq_tol <= tob[1] < self.upper_limit
+            and tob[0] < self.high_freq_tol
         ])
 
         return np.array([self._bound_to_index(bound) for bound in tob_bounds])
@@ -133,8 +133,8 @@ class TOL:
         :param psd: The power spectral density the be used for TOL computation.
         :param sample_rate: The sounds sample rate.
         :param nfft: The size of the FFT-computation window
-        :param low_freq: The lower limit of the TOL study range.
-        :param high_freq: The higher limit of the TOL study range
+        :param low_freq_tol: The lower limit of the TOL study range.
+        :param high_freq_tol: The higher limit of the TOL study range
         :return:
         """
 
