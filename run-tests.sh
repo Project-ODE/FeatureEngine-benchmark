@@ -14,7 +14,7 @@ sbt assembly
 sbt scalastyle
 
 # Run benchmark on test file in order to generate workflow results.
-$SPARK_HOME/bin/spark-submit target/scala-2.11/FeatureEngine-benchmark-assembly-0.1.jar
+$SPARK_HOME/bin/spark-submit --class org.oceandataexplorer.engine.benchmark.Example target/scala-2.11/FeatureEngine-benchmark-assembly-0.1.jar
 
 # Return to project' root directory
 cd ..
