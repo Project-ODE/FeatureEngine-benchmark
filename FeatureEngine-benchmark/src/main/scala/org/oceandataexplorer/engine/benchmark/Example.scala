@@ -46,7 +46,7 @@ object Example {
     val spark = SparkSession.builder.getOrCreate()
 
     val resourcesDir = new File("../test/resources")
-    val metadataFile = new File("../test/resources/wavFilesMetadata/Example_metadata.csv")
+    val wavFilesMetadataFile = new File("../test/resources/metadata/Example_metadata.csv")
 
 
     // Signal processing parameters
@@ -62,7 +62,7 @@ object Example {
     // Sound parameters
     val soundsPath = resourcesDir.getCanonicalFile.toURI.toString + "/sounds"
     // read wavFilesMetadata & drop header
-    val wavFilesMetadata = Source.fromFile(metadataFile).mkString.split("\n").drop(1).toList
+    val wavFilesMetadata = Source.fromFile(wavFilesMetadataFile).mkString.split("\n").drop(1).toList
     val soundsNameAndStartDate = wavFilesMetadata.map(wavFileMetadata => {
       val metadataArray = wavFileMetadata.split(",")
       (metadataArray(0), new DateTime(metadataArray(1), DateTimeZone.UTC))
