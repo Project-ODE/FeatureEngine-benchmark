@@ -96,7 +96,7 @@ object SPM {
 
     val runId = s"Example_${recordSizeInFrame}_${windowSize}_${windowOverlap}_$nfft"
 
-    val resultsDestination = resourcesDir.getCanonicalFile.toURI.toString +
+    val resultsDestination = outputBaseDir.getCanonicalFile.toURI.toString +
       s"/results/$nNodes/feature_engine_benchmark/" + runId
 
     val hadoopWavReader = new HadoopWavReader(
