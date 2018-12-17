@@ -43,6 +43,8 @@ object SPM {
    * - nFiles: The number of SPM wav files to be processed in this run as a Int.
    * - inputBaseDir: The base directory containing the dataset as a String.
    * - outputBaseDir: The base directory where results are written as a String.
+   * For example, this set of parameters works:
+   * Array("1", "200", ""/home/datawork-alloha-ode/Datasets/SPM", "/home/datawork-alloha-ode/benchmark")
    */
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder.getOrCreate()
