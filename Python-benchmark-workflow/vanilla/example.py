@@ -42,7 +42,8 @@ WINDOW_OVERLAP = 128
 
 RUN_ID = DATASET_ID + "_" +"_".join(
     [str(p) for p in [SEGMENT_SIZE, WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
-RESULTS_DESTINATION = RESOURCES_DIR + "/results/python_vanilla/" + RUN_ID
+
+RESULTS_DESTINATION = RESOURCES_DIR + "/results/python_vanilla/1/" + RUN_ID
 
 WAV_FILES = [{
     "name": file_metadata[0],

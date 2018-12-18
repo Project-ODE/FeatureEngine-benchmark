@@ -36,6 +36,7 @@ N_CHANNELS = 1
 
 RESULTS_ROOT_DIR = "../resources/results"
 VERSION_LIST = ["feature_engine_benchmark", "python_vanilla"]
+N_NODES_COMPUTED = [1]
 
 DATASET_ID = "Example"
 SOUND_IDS = ["Example0", "Example1"]
@@ -50,8 +51,13 @@ RUN_ID = DATASET_ID + "_" +"_".join(
     [str(p) for p in [SEGMENT_SIZE, WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
 
 if __name__ == "__main__":
-    results_dict_dfs = read_results.read(RESULTS_ROOT_DIR, RUN_ID, VERSION_LIST)
+    for n_nodes in N_NODES_COMPUTED:
+        results_dict_dfs = read_results.read(
+            RESULTS_ROOT_DIR,
+            n_nodes,
+            RUN_ID,
+            VERSION_LIST)
 
-    print("Beginning tests on results:")
+        print("Beginning tests on {} nodes results:".format(n_nodes))
 
-    run_tests(results_dict_dfs)
+        run_tests(results_dict_dfs)
