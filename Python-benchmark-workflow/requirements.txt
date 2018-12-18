@@ -1,6 +1,7 @@
 # Dependencies for python benchmark vanilla version
 
 pylint
+pycodestyle
 scipy
 numpy
 pandas
