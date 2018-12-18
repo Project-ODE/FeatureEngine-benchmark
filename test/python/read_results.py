@@ -26,11 +26,12 @@ import os
 import glob
 import pandas as pd
 
-def read(results_root_dir, run_id, version_list):
+def read(results_root_dir, n_nodes, run_id, version_list):
     results = {}
 
     for version in version_list:
-        results[version] = _read_json_files(results_root_dir + "/" + version + "/" + run_id)
+        results[version] = _read_json_files(
+            results_root_dir + "/" + version + "/" + str(n_nodes) + "/" + run_id)
 
     return results
 
