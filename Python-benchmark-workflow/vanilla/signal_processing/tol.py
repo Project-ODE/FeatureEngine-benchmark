@@ -34,7 +34,13 @@ class TOL:
     """
     Class computing TOL
     """
-    def __init__(self, sample_rate, nfft, low_freq_tol=None, high_freq_tol=None):
+    def __init__(
+            self,
+            sample_rate,
+            nfft,
+            low_freq_tol=None,
+            high_freq_tol=None
+    ):
 
         if nfft is not int(sample_rate):
             Exception(
@@ -44,7 +50,8 @@ class TOL:
 
         self.lower_limit = 1.0
         self.upper_limit = max(sample_rate / 2.0,
-                               high_freq_tol if high_freq_tol is not None else 0.0)
+                               high_freq_tol if high_freq_tol
+                               is not None else 0.0)
 
         if low_freq_tol is None:
             self.low_freq_tol = self.lower_limit
