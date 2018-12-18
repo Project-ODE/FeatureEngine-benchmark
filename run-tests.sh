@@ -31,6 +31,7 @@ docker run -it --rm -v $HOME/.local/lib/python3.7:/root/.local/lib/python3.7\
   apt update && apt install -y libsndfile1-dev &&\
   cd /root/project/Python-benchmark-workflow &&\
   pip3 install --user -r requirements.txt &&\
+  python3 -m pylint --rcfile=.pylintrc vanilla &&\
   cd vanilla &&\
   python3 example.py &&\
   cd ../../test/python &&\
