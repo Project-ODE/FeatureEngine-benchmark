@@ -32,10 +32,10 @@ from io_handlers import SoundHandler, ResultsHandler
 
 
 # Four arguments should be passed through the argument vector:
-#   - nNodes: The number of datarmor nodes used in this run as a Int.
-#   - nFiles: The number of SPM wav files to be processed in this run as a Int.
-#   - INPUT_BASE_DIR: The base directory containing the dataset as a String.
-#   - OUTPUT_BASE_DIR: The base directory where results are written as a String.
+#  - nNodes: The number of datarmor nodes used in this run as a Int.
+#  - nFiles: The number of SPM wav files to be processed in this run as a Int.
+#  - INPUT_BASE_DIR: The base directory containing the dataset as a String.
+#  - OUTPUT_BASE_DIR: The base directory where results are written as a String.
 # For example, this set of parameters works as of 2018-12-17 on Datarmor:
 # Array("1", "200", ""/home/datawork-alloha-ode/Datasets/SPM",
 #   "/home/datawork-alloha-ode/benchmark")
@@ -60,7 +60,8 @@ WINDOW_OVERLAP = 128
 RUN_ID = DATASET_ID + "_" + "_".join(
     [str(p) for p in [SEGMENT_SIZE, WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
 
-RESULTS_DESTINATION = OUTPUT_BASE_DIR + "/results/python_vanilla/{}/".format(N_NODES) + RUN_ID
+RESULTS_DESTINATION = OUTPUT_BASE_DIR +\
+    "/results/python_vanilla/{}/".format(N_NODES) + RUN_ID
 
 WAV_FILES = [{
     "name": file_metadata[0],
