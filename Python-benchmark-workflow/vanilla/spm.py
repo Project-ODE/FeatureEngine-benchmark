@@ -32,8 +32,8 @@ from io_handlers import SoundHandler, ResultsHandler
 
 
 # Four arguments should be passed through the argument vector:
-#  - nNodes: The number of datarmor nodes used in this run as a Int.
-#  - nFiles: The number of SPM wav files to be processed in this run as a Int.
+#  - N_NODES: The number of datarmor nodes used in this run as a Int.
+#  - N_FILES: The number of SPM wav files to be processed in this run as a Int.
 #  - INPUT_BASE_DIR: The base directory containing the dataset as a String.
 #  - OUTPUT_BASE_DIR: The base directory where results are written as a String.
 # For example, this set of parameters works as of 2018-12-17 on Datarmor:
