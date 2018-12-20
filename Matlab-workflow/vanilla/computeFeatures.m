@@ -21,11 +21,11 @@ function results = computeFeatures(...
     calibrationFactor, segmentDuration, windowSize,...
     windowOverlap, windowFunction, nfft, lowFreq, highFreq)
 
-    wavInfo = audioinfo(strcat(wavFileLocation, wavFileName));
+    wavInfo = audioinfo(strcat(wavFileLocation, filesep, wavFileName));
 
     % @TODO perform checks against expected infos
 
-    rawSound = audioread(strcat(wavFileLocation, wavFileName), 'double');
+    rawSound = audioread(strcat(wavFileLocation, filesep, wavFileName), 'double');
 
     calibratedSignal = rawSound * (10 ^ (calibrationFactor / 20));
 
