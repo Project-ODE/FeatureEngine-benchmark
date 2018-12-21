@@ -95,3 +95,8 @@ to the sound channel and the second to the feature itself.
 FeatureEngine-benchmark save its results using spark's default json writer
 which write results using the same format as the one described above except
 that it creates one json file per partition instead of one per file.
+
+#### Matlab results
+
+Matlab benchmark cannot be run with travis. Thus, Matlab's benchmark are run
+locally and the results are saved with git to allow tests with the other benchmarks.
