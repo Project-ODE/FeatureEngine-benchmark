@@ -27,7 +27,7 @@ from datetime import datetime, timezone
 import numpy
 import pandas
 
-# For some reason, pylint can't resolve scipy.signal.hamming
+# For some reason, pylint can't resolve spectral_computation
 # pylint: disable=no-member,no-name-in-module
 from signal_processing import spectral_computation
 # pylint: enable=no-member,no-name-in-module
