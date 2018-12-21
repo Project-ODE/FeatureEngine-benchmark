@@ -115,7 +115,9 @@ for iFile = 1 : length(wavFiles.name)
     fd = fopen(resultFile, 'w');
 
     for iRes = 1 : length(results)
-        fprintf(fd, jsonencode(results(iRes)));
+        resultsAsString = strrep(strrep(...
+            jsonencode(results(iRes)), '"[[', '[['), ']]"', ']]');
+        fprintf(fd, resultsAsString);
         fprintf(fd, '\n');
     end
 
