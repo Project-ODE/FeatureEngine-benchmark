@@ -19,7 +19,7 @@
 # Authors: Dorian Cazau, Alexandre Degurse
 
 """
-Module containing the FeqtureGenerator class
+Module containing the FeatureGenerator class
 """
 
 from datetime import datetime, timezone
@@ -28,7 +28,7 @@ import scipy.signal
 import numpy
 import pandas
 
-from .tol import TOL
+from signal_processing import TOL
 
 
 class FeatureGenerator:

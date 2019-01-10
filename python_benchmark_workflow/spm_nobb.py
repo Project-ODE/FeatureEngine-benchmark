@@ -27,7 +27,7 @@ import sys
 import pandas as pd
 from dateutil.parser import parse
 
-from signal_processing import FeatureGenerator
+from signal_processing_nobb import FeatureGenerator
 from io_handlers import SoundHandler, ResultsHandler
 
 
