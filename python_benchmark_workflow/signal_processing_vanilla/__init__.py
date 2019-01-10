@@ -19,8 +19,7 @@
 # Authors: Alexandre Degurse
 
 """
-Module providing handlers for file I/O operations such as reading sound files
+Module containing all signal processing assets of the vanilla benchmark
 """
 
-from .sound_handler import SoundHandler
-from .results_handler import ResultsHandler
+from .feature_generator import FeatureGenerator

@@ -19,7 +19,5 @@
 # Authors: Alexandre Degurse
 
 """
-Module containing all signal processing assets of the benchmark
+Module containing all assets of the python benchmarks
 """
-
-from .feature_generator import FeatureGenerator

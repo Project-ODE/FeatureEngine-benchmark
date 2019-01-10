@@ -19,15 +19,18 @@
 # Authors: Dorian Cazau, Alexandre Degurse
 
 """
-Module containing the FeqtureGenerator class
+Module containing the FeatureGenerator class
 """
 
 from datetime import datetime, timezone
 
-import scipy.signal
 import numpy
 import pandas
 
+# For some reason, pylint can't resolve spectral_computation
+# pylint: disable=no-member,no-name-in-module
+from signal_processing_nobb import spectral_computation
+# pylint: enable=no-member,no-name-in-module
 from .tol import TOL
 
 
@@ -49,7 +52,6 @@ class FeatureGenerator:
         self.window_size = window_size
         self.window_overlap = window_overlap
         self.nfft = nfft
-        self.window_function = "hamming"
 
         if low_freq is None:
             self.low_freq = 0.2 * self.sample_rate
@@ -116,31 +118,19 @@ class FeatureGenerator:
         results = []
 
         for i_segment in range(n_segments):
-            welch = scipy.signal.welch(
-                x=segmented_sound[i_segment],
-                fs=self.sample_rate,
-                nperseg=self.window_size,
-                noverlap=self.window_overlap,
-                window=self.window_function,
-                nfft=self.nfft,
-                detrend=False,
-                return_onesided=True,
-                scaling='density',
-                axis=-1
-            )[1]
+            welch = spectral_computation.welch(
+                segmented_sound[i_segment],
+                sample_rate,
+                self.window_size,
+                self.window_overlap,
+                self.nfft)
 
-            psd = scipy.signal.spectrogram(
-                x=segmented_sound[i_segment],
-                fs=self.sample_rate,
-                window=self.window_function,
-                nperseg=int(self.sample_rate),
-                noverlap=0,
-                nfft=int(self.sample_rate),
-                scaling="density",
-                detrend=False,
-                return_onesided=True,
-                axis=-1
-            )[2].T
+            psd = spectral_computation.spectrogram(
+                signal=segmented_sound[i_segment],
+                sample_rate=sample_rate,
+                window_size=sample_rate,
+                window_overlap=0,
+                nfft=int(sample_rate))
 
             tols = numpy.zeros((psd.shape[0], self.tol_class.tob_size))
 
