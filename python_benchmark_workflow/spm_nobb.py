@@ -65,11 +65,11 @@ RESULTS_DESTINATION = OUTPUT_BASE_DIR +\
 
 WAV_FILES = [{
     "name": file_metadata[0],
-    "timestamp": parse(file_metadata[9] + " " + file_metadata[10]) + " UTC",
+    "timestamp": parse(file_metadata[9] + " " + file_metadata[10] + " UTC"),
     "sample_rate": 32768.0,
     "wav_bits": 16,
     "n_channels": 1
-} for file_metadata in pd.read_csv(METADATA_FILE_PATH).values]
+} for file_metadata in pd.read_csv(METADATA_FILE_PATH, delimiter=";").values]
 
 for wav_file in WAV_FILES[:N_FILES]:
     sound_handler = SoundHandler(
