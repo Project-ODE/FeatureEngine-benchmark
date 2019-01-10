@@ -31,7 +31,7 @@ import pandas
 # pylint: disable=no-member,no-name-in-module
 from signal_processing_nobb import spectral_computation
 # pylint: enable=no-member,no-name-in-module
-from .tol import TOL
+from signal_processing import TOL
 
 
 class FeatureGenerator:

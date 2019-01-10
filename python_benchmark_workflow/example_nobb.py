@@ -19,7 +19,7 @@
 # Authors: Alexandre Degurse
 
 """
-Main script used to run the benchmark on test data
+Example of main script used to run the benchmark on test data
 """
 
 import pandas as pd

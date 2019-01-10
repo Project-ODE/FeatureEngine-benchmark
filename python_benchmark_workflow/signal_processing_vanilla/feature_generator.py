@@ -28,7 +28,7 @@ import scipy.signal
 import numpy
 import pandas
 
-from .tol import TOL
+from signal_processing import TOL
 
 
 class FeatureGenerator:
