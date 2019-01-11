@@ -98,7 +98,7 @@ object SPM {
     val soundNames = soundsNameAndStartDate.map(_._1).reduce((p,n) => p + "," + n)
     val soundsPath = soundPath + "/{" + soundNames + "}"
 
-    val runId = s"Example_${recordSizeInFrame}_${windowSize}_${windowOverlap}_$nfft"
+    val runId = s"SPM${nFiles}files_${recordSizeInFrame}_${windowSize}_${windowOverlap}_$nfft"
 
     val resultsDestination = outputBaseDirFile.getCanonicalFile.toURI.toString +
       s"/results/feature_engine_benchmark/$nNodes/" + runId
