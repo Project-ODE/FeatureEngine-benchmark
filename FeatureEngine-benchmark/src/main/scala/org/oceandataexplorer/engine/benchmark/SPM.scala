@@ -23,6 +23,7 @@ import scala.io.Source
 
 import org.apache.spark.sql._
 import org.apache.spark.rdd.RDD
+import org.apache.spark.storage.StorageLevel
 
 import com.github.nscala_time.time.Imports._
 
@@ -60,7 +61,7 @@ object SPM {
     val outputBaseDirFile = new File(outputBaseDir)
 
     // Signal processing parameters
-    val recordSizeInSec = 1.0f
+    val recordSizeInSec = 60.0f
     val soundSamplingRate = 32768.0f
     val recordSizeInFrame = (recordSizeInSec * soundSamplingRate).toInt
     val recordSize = (recordSizeInSec * soundSamplingRate).toInt
@@ -118,7 +119,9 @@ object SPM {
 
     val calibrationClass = SoundCalibration(0.0)
 
-    val calibratedRecords: RDD[Record] = records.mapValues(chan => chan.map(calibrationClass.compute))
+    val calibratedRecords: RDD[Record] = records
+      .mapValues(chan => chan.map(calibrationClass.compute))
+      .persist(StorageLevel.MEMORY_AND_DISK)
 
     val welchSplWorkflow = new WelchSplWorkflow(
       spark,
