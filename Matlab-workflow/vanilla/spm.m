@@ -45,7 +45,7 @@ sampleRate = 32768.0;
 % linear scale
 calibrationFactor = 0.0;
 % long window, in seconds
-segmentDuration = 1.0;
+segmentDuration = 60.0;
 % short window, in samples
 windowSize = 256;
 % short window, in samples
@@ -76,7 +76,7 @@ fclose(fid);
 
 %% define data location
 
-resultsLocation = strcat(outputBaseDir, 'results', filesep, 'matlab_vanilla', filesep,...
+resultsLocation = strcat(outputBaseDir, filesep, 'results', filesep, 'matlab_vanilla', filesep,...
     char(string(nNodes)), filesep, runId);
 
 
