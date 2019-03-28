@@ -35,6 +35,7 @@ docker run -it --rm -v $HOME/.local/lib/python3.7:/root/.local/lib/python3.7\
   python3 -m pycodestyle . &&\
   python3 example_vanilla.py &&\
   python3 example_nobb.py &&\
+  python3 example_mt.py &&\
   cd ../test/python &&\
   python3 test_Example_1500_256_128_256.py
   "
