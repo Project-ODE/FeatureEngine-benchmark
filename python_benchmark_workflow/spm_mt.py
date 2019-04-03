@@ -27,7 +27,8 @@ import sys
 import pandas as pd
 from dateutil.parser import parse
 
-import os, time
+import os
+import time
 import numpy as np
 from multiprocessing import Pool
 
@@ -122,10 +123,13 @@ if __name__ == "__main__":
         METADATA_FILE_PATH, delimiter=";").values
     ]
 
+    # To use all available cores:
+    # ncpus = len(os.sched_getaffinity(0))
     ncpus = 24
-    #ncpus = len(os.sched_getaffinity(0)) - 8
 
     with Pool(processes=ncpus) as pool:
         durations = pool.map(process_file, wav_files[:N_FILES])
         print(
-            "\nFinished job, processing file take {} sec avg".format(np.average(durations)))
+            "\nFinished job, processing file take {} sec avg"
+            .format(np.average(durations))
+        )
