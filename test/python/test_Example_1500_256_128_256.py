@@ -35,7 +35,14 @@ from run_tests import run_tests
 N_CHANNELS = 1
 
 RESULTS_ROOT_DIR = "../resources/results"
-VERSION_LIST = ["feature_engine_benchmark", "python_vanilla", "matlab_vanilla", "python_nobb"]
+VERSION_LIST = [
+    "feature_engine_benchmark",
+    "python_vanilla",
+    "matlab_vanilla",
+    "python_nobb",
+    "python_mt"
+]
+
 N_NODES_COMPUTED = [1]
 
 DATASET_ID = "Example"
