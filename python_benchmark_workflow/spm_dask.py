@@ -33,7 +33,7 @@ from pathlib import Path
 import numpy as np
 from dask.distributed import Client, LocalCluster
 
-from signal_processing_notol import FeatureGenerator
+from signal_processing_vanilla import FeatureGenerator
 from io_handlers import SoundHandler, ResultsHandler
 
 
