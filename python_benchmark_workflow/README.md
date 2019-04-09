@@ -16,3 +16,6 @@ processing routines. Files are processed sequentially.
 
 + _mt_ - trivial multi-threaded approach, it is based on _vanilla_ but
 processes multiple files simultaneously using python multi-processing library.
+
++ _dask_ - trivial distributed approach, it is based on _vanilla_ but
+processes multiple files simultaneously using dask.
