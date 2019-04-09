@@ -3,7 +3,7 @@
 # Fail if a single command fails
 set -ev
 
-SPARK_HOME="$HOME/spark/spark-2.4.0-bin-hadoop2.7"
+SPARK_HOME="$HOME/spark/spark-2.4.1-bin-hadoop2.7"
 
 cd FeatureEngine-benchmark
 

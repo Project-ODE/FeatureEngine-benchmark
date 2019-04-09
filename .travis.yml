@@ -20,7 +20,7 @@ scala:
 
 before_install:
   # if spark is not present, download it and put it in spark's cache directory
-  - if [ ! -e $HOME/spark/spark-2.4.0-bin-hadoop2.7 ]; then curl http://apache.mirrors.ovh.net/ftp.apache.org/dist/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz > $HOME/spark.tgz && tar -C $HOME/spark -xf $HOME/spark.tgz; fi
+  - if [ ! -e $HOME/spark/spark-2.4.1-bin-hadoop2.7 ]; then curl http://apache.mirrors.ovh.net/ftp.apache.org/dist/spark/spark-2.4.1/spark-2.4.1-bin-hadoop2.7.tgz > $HOME/spark.tgz && tar -C $HOME/spark -xf $HOME/spark.tgz; fi
   - docker pull python:3.7
 
 script: "./run-tests.sh"
