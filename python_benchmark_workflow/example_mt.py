@@ -49,19 +49,19 @@ RUN_ID = DATASET_ID + "_" + "_".join(
 RESULTS_DESTINATION = RESOURCES_DIR + "/results/python_mt/1/" + RUN_ID
 
 
-def process_file(wav_file):
+def process_file(wav_config):
     sound_handler = SoundHandler(
         WAV_FILES_LOCATION,
-        wav_file["name"],
-        wav_file["wav_bits"],
-        wav_file["sample_rate"],
-        wav_file["n_channels"],
-        wav_file["n_samples"])
+        wav_config["name"],
+        wav_config["wav_bits"],
+        wav_config["sample_rate"],
+        wav_config["n_channels"],
+        wav_config["n_samples"])
 
     feature_generator = FeatureGenerator(
         sound_handler,
-        wav_file["timestamp"],
-        wav_file["sample_rate"],
+        wav_config["timestamp"],
+        wav_config["sample_rate"],
         CALIBRATION_FACTOR,
         SEGMENT_SIZE,
         WINDOW_SIZE,
@@ -72,7 +72,7 @@ def process_file(wav_file):
 
     # extract sound's id from sound file name
     # (sound's name follow convention described in test/resources/README.md)
-    sound_id = wav_file["name"].split("_")[0]
+    sound_id = wav_config["name"].split("_")[0]
 
     resultsHandler = ResultsHandler(
         sound_id,
@@ -86,7 +86,7 @@ def process_file(wav_file):
 
 
 if __name__ == "__main__":
-    wav_files = [{
+    wav_configs = [{
         "name": file_metadata[0],
         "timestamp": parse(file_metadata[1]),
         "sample_rate": 1500.0,
@@ -97,4 +97,4 @@ if __name__ == "__main__":
 
     ncpus = len(os.sched_getaffinity(0))
     with Pool(processes=ncpus) as pool:
-        pool.map(process_file, wav_files)
+        pool.map(process_file, wav_configs)

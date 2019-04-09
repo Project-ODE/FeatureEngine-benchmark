@@ -69,29 +69,29 @@ RESULTS_DESTINATION = OUTPUT_BASE_DIR +\
     "/results/python_mt/{}/".format(N_NODES) + RUN_ID
 
 
-def process_file(wav_file):
-    print("Start processing {}".format(wav_file["name"]))
+def process_file(wav_config):
+    print("Start processing {}".format(wav_config["name"]))
     tStart = time.time()
 
     sound_handler = SoundHandler(
         WAV_FILES_LOCATION,
-        wav_file["name"],
-        wav_file["wav_bits"],
-        wav_file["sample_rate"],
-        wav_file["n_channels"])
+        wav_config["name"],
+        wav_config["wav_bits"],
+        wav_config["sample_rate"],
+        wav_config["n_channels"])
 
-    segment_size = int(SEGMENT_DURATION * wav_file["sample_rate"])
+    segment_size = int(SEGMENT_DURATION * wav_config["sample_rate"])
 
     feature_generator = FeatureGenerator(
-        sound_handler, wav_file["timestamp"],
-        wav_file["sample_rate"], CALIBRATION_FACTOR,
+        sound_handler, wav_config["timestamp"],
+        wav_config["sample_rate"], CALIBRATION_FACTOR,
         segment_size, WINDOW_SIZE, WINDOW_OVERLAP, NFFT)
 
     results = feature_generator.generate()
 
     # extract sound's id from sound file name
     # (sound's name follow convention described in test/resources/README.md)
-    sound_id = wav_file["name"][:-4]
+    sound_id = wav_config["name"][:-4]
 
     resultsHandler = ResultsHandler(
         sound_id,
@@ -105,13 +105,13 @@ def process_file(wav_file):
     resultsHandler.write(results)
 
     duration = time.time() - tStart
-    print("Finished processing {} in {}".format(wav_file["name"], duration))
+    print("Finished processing {} in {}".format(wav_config["name"], duration))
 
     return duration
 
 
 if __name__ == "__main__":
-    wav_files = [{
+    wav_configs = [{
         "name": file_metadata[0],
         "timestamp": parse(
             file_metadata[9] + " " + file_metadata[10] + " UTC"
@@ -128,7 +128,7 @@ if __name__ == "__main__":
     ncpus = 24
 
     with Pool(processes=ncpus) as pool:
-        durations = pool.map(process_file, wav_files[:N_FILES])
+        durations = pool.map(process_file, wav_configs[:N_FILES])
         print(
             "\nFinished job, processing file take {} sec avg"
             .format(np.average(durations))
