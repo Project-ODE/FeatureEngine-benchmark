@@ -85,7 +85,7 @@ object SPMScalaOnly {
     val runId = s"SPM${nFiles}files_${recordSizeInFrame}_${windowSize}_${windowOverlap}_$nfft"
 
     val resultsDestination = outputBaseDirFile.getCanonicalFile.toURI.toString +
-      s"/results/feature_engine_benchmark/$nNodes/" + runId
+      s"/results/scala_only/$nNodes/" + runId
 
     val resultDestinationFile = new File(new URI(resultsDestination))
 
