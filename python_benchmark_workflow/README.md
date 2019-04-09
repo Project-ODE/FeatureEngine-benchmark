@@ -15,4 +15,4 @@ nor distribute computation and uses a custom implementation of signal
 processing routines. Files are processed sequentially.
 
 + _mt_ - trivial multi-threaded approach, it is based on _vanilla_ but
-processes multiple files simultaneously using multi-theading.
+processes multiple files simultaneously using python multi-processing library.
