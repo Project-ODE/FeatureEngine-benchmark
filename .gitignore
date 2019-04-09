@@ -8,6 +8,7 @@ test/resources/results/feature_engine_benchmark
 
 *.pyc
 __pycache__
+dask-worker-space
 
 # ignore scala build files
 *.class
@@ -19,4 +20,3 @@ project/target
 spark-warehouse
 metastore_db
 .idea
-

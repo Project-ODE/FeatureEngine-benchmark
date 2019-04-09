@@ -40,7 +40,8 @@ VERSION_LIST = [
     "python_vanilla",
     "matlab_vanilla",
     "python_nobb",
-    "python_mt"
+    "python_mt",
+    "python_dask"
 ]
 
 N_NODES_COMPUTED = [1]
