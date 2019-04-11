@@ -21,6 +21,8 @@ import java.io.File
 import scala.io.Source
 import java.net.URI
 
+import scala.collection.parallel._
+import scala.concurrent.forkjoin.ForkJoinPool
 
 // scalastyle:off
 
@@ -70,31 +72,34 @@ object ExampleScalaOnly {
       resultDestinationFile.mkdirs()
     }
 
-    val pool = java.util.concurrent.Executors.newFixedThreadPool(2)
+    val handlers = soundsNameAndStartDate.map{ case (soundName, soundStartDate) => {
+        val soundUri = new URI(soundsPath + "/" + soundName)
+        val soundId = soundName.split("_")(0)
 
-    for ((soundName, soundStartDate) <- soundsNameAndStartDate) {
-
-      val soundUri = new URI(soundsPath + "/" + soundName)
-      val soundId = soundName.split("_")(0)
-
-      val sfc = SingleFileHandler(
-        recordSizeInSec: Float,
-        windowSize: Int,
-        windowOverlap: Int,
-        nfft: Int,
-        lowFreqTOL: Option[Double],
-        highFreqTOL: Option[Double],
-        soundUri: URI,
-        soundId: String,
-        soundSamplingRate: Float,
-        soundChannels: Int,
-        soundSampleSizeInBits: Int,
-        soundStartDate: String,
-        resultsDestination: String
-      )
-
-      pool.execute(sfc)
+        SingleFileHandler(
+          recordSizeInSec: Float,
+          windowSize: Int,
+          windowOverlap: Int,
+          nfft: Int,
+          lowFreqTOL: Option[Double],
+          highFreqTOL: Option[Double],
+          soundUri: URI,
+          soundId: String,
+          soundSamplingRate: Float,
+          soundChannels: Int,
+          soundSampleSizeInBits: Int,
+          soundStartDate: String,
+          resultsDestination: String
+        )
+      }
     }
+    .toVector
+    .par
+
+    val pool = new scala.concurrent.forkjoin.ForkJoinPool(2)
+    handlers.tasksupport = new ForkJoinTaskSupport(pool)
+
+    handlers.foreach(_.execute)
 
     pool.shutdown()
   }

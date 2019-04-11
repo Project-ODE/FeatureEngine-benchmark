@@ -42,7 +42,7 @@ case class SingleFileHandler (
   soundSampleSizeInBits: Int,
   soundStartDate: String,
   resultsDestination: String
-) extends Runnable {
+) {
   /**
    * Worker class applying [[ScalaBenchmarkWorkflow]] to a wav file.
    */
@@ -58,7 +58,7 @@ case class SingleFileHandler (
     highFreqTOL
   )
 
-  override def run(): Unit = {
+ def execute(): Unit = {
     val results = scalaOnlyWorkflow(
       soundUri,
       soundSamplingRate,

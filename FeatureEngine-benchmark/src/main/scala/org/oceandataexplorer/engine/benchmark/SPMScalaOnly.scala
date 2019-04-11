@@ -23,6 +23,8 @@ import org.oceandataexplorer.engine.workflows._
 import scala.io.Source
 import java.net.URI
 
+import scala.concurrent.forkjoin.ForkJoinPool
+import scala.collection.parallel._
 
 // scalastyle:off
 
@@ -95,31 +97,34 @@ object SPMScalaOnly {
       resultDestinationFile.mkdirs()
     }
 
-    val pool = java.util.concurrent.Executors.newFixedThreadPool(nThreads)
+    val handlers = soundsNameAndStartDate.map{ case (soundName, soundStartDate) => {
+        val soundUri = new URI(soundPath + "/" + soundName)
+        val soundId = soundName.split("_")(0)
 
-    for ((soundName, soundStartDate) <- soundsNameAndStartDate) {
-
-      val soundUri = new URI(soundPath + "/" + soundName)
-      val soundId = soundName.split("_")(0)
-
-      val sfc = SingleFileHandler(
-        recordSizeInSec: Float,
-        windowSize: Int,
-        windowOverlap: Int,
-        nfft: Int,
-        lowFreqTOL: Option[Double],
-        highFreqTOL: Option[Double],
-        soundUri: URI,
-        soundId: String,
-        soundSamplingRate: Float,
-        soundChannels: Int,
-        soundSampleSizeInBits: Int,
-        soundStartDate: String,
-        resultsDestination: String
-      )
-
-      pool.execute(sfc)
+        SingleFileHandler(
+          recordSizeInSec: Float,
+          windowSize: Int,
+          windowOverlap: Int,
+          nfft: Int,
+          lowFreqTOL: Option[Double],
+          highFreqTOL: Option[Double],
+          soundUri: URI,
+          soundId: String,
+          soundSamplingRate: Float,
+          soundChannels: Int,
+          soundSampleSizeInBits: Int,
+          soundStartDate: String,
+          resultsDestination: String
+        )
+      }
     }
+    .toVector
+    .par
+
+    val pool = new ForkJoinPool(nThreads)
+    handlers.tasksupport = new ForkJoinTaskSupport(pool)
+
+    handlers.foreach(_.execute)
 
     pool.shutdown()
   }
