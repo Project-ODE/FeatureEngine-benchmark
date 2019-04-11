@@ -39,6 +39,8 @@ object SPMScalaOnly {
     val nFiles = args(1).toInt
     val inputBaseDir = args(2)
     val outputBaseDir = args(3)
+    // default number of thread 24
+    val nThreads = if (args.length == 4) 24 else args(4).toInt
 
     val inputBaseDirFile = new File(inputBaseDir)
     val wavDir = new File(inputBaseDirFile.getCanonicalFile + "/PAM/SPMAuralA2010")
@@ -93,7 +95,7 @@ object SPMScalaOnly {
       resultDestinationFile.mkdirs()
     }
 
-    val pool = java.util.concurrent.Executors.newFixedThreadPool(24)
+    val pool = java.util.concurrent.Executors.newFixedThreadPool(nThreads)
 
     for ((soundName, soundStartDate) <- soundsNameAndStartDate) {
 
