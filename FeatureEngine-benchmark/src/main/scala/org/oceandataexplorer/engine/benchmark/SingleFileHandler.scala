@@ -49,7 +49,7 @@ case class SingleFileHandler (
 
   val recordSizeInFrame: Int = (soundSamplingRate * recordSizeInSec).toInt
 
-  val scalaOnlyWorkflow = new ScalaBenchmarkWorkflow(
+  val scalaBenchmarkWorkflow = new ScalaBenchmarkWorkflow(
     recordSizeInSec,
     windowSize,
     windowOverlap,
@@ -59,7 +59,7 @@ case class SingleFileHandler (
   )
 
  def execute(): Unit = {
-    val results = scalaOnlyWorkflow(
+    val results = scalaBenchmarkWorkflow(
       soundUri,
       soundSamplingRate,
       soundChannels,

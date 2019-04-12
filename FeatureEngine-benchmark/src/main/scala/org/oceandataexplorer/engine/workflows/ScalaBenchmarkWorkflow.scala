@@ -103,9 +103,9 @@ class ScalaBenchmarkWorkflow
   /**
    * Method computing TOLs over the calibrated records
    *
-   * @param records Computed records containing (timestamp, welch, spl, calibrated sound)
+   * @param records Input records containing (timestamp, welch, spl, calibrated sound)
    * @param soundSamplingRate Sound's sample rate
-   * @return A Map containing the tols
+   * @return A array of tuples containing the results formated as Array[(timestamp, welch, spl, tol)]
    */
   def computeTol(
     records: Array[(Long, Array[Array[Double]], Array[Array[Double]], Array[Array[Double]])],
@@ -140,6 +140,49 @@ class ScalaBenchmarkWorkflow
   }
 
   /**
+   * Method computing welch & spl over the calibrated records
+   *
+   * @param records Input records containing (timestamp, calibrated sound)
+   * @param soundSamplingRate Sound's sample rate
+   * @return A array of tuples containing the results formated as Array[(timestamp, welch, spl, calibrated sound)]
+   */
+  def computeWelchSpl(
+    records: Array[(Long, Array[Array[Double]])],
+    soundSamplingRate: Float,
+    soundCalibrationFactor: Double
+  ) : Array[(Long, Array[Array[Double]], Array[Array[Double]], Array[Array[Double]])] = {
+
+    val soundCalibrationClass = SoundCalibration(soundCalibrationFactor)
+    val fftClass = FFT(nfft, soundSamplingRate)
+    val periodogramClass = Periodogram(
+      nfft,
+      1.0/(soundSamplingRate*hammingNormalizationFactor),
+      1.0f
+    )
+    val welchClass = WelchSpectralDensity(nfft, soundSamplingRate)
+
+    records
+      .map{case (idx, calibratedChannels) => (idx, calibratedChannels,
+        calibratedChannels.map(soundCalibrationClass.compute))}
+      .map{case (idx, calibratedChannels, segmentedChannels) => (idx, calibratedChannels,
+        segmentedChannels.map(segmentationClass.compute))}
+      .map{case (idx, calibratedChannels, segmentedChannels) => (idx, calibratedChannels,
+        segmentedChannels.map(_.map(hammingClass.applyToSignal)))}
+      .map{case (idx, calibratedChannels, windowedChannels) => (idx, calibratedChannels,
+        windowedChannels.map(_.map(fftClass.compute)))}
+      .map{case (idx, calibratedChannels, fftChannels) => (idx, calibratedChannels,
+        fftChannels.map(_.map(periodogramClass.compute)))}
+      .map{case (idx, calibratedChannels, psdChannels) => (idx, calibratedChannels,
+        psdChannels.map(welchClass.compute))}
+      .map{case (idx, calibratedChannels, welchChannels) => (
+        idx,
+        welchChannels,
+        Array(welchChannels.map(energyClass.computeSPLFromPSD)),
+        calibratedChannels
+      )}
+  }
+
+  /**
    * Apply method for the workflow
    *
    * @param soundUri The URI to find the sound
@@ -148,7 +191,7 @@ class ScalaBenchmarkWorkflow
    * @param soundSampleSizeInBits The number of bits used to encode a sample
    * @param soundCalibrationFactor The calibration factor for raw sound calibration
    * @param soundStartDate The starting date of the sound file
-   * @return A map that contains all basic features as RDDs
+   * @return A array of tuples containing the results formated as Array[(timestamp, welch, spl, tol)]
    */
   def apply(
     soundUri: URI,
@@ -168,31 +211,11 @@ class ScalaBenchmarkWorkflow
       soundSampleSizeInBits,
       soundStartDate)
 
-    val soundCalibrationClass = SoundCalibration(soundCalibrationFactor)
-    val fftClass = FFT(nfft, soundSamplingRate)
-    val periodogramClass = Periodogram(
-      nfft, 1.0/(soundSamplingRate*hammingNormalizationFactor), 1.0f)
-    val welchClass = WelchSpectralDensity(nfft, soundSamplingRate)
-
-    val welchSplCalibratedRecords = records
-      .map{case (idx, calibratedChannels) => (idx, calibratedChannels,
-        calibratedChannels.map(soundCalibrationClass.compute))}
-      .map{case (idx, calibratedChannels, segmentedChannels) => (idx, calibratedChannels,
-        segmentedChannels.map(segmentationClass.compute))}
-      .map{case (idx, calibratedChannels, segmentedChannels) => (idx, calibratedChannels,
-        segmentedChannels.map(_.map(hammingClass.applyToSignal)))}
-      .map{case (idx, calibratedChannels, windowedChannels) => (idx, calibratedChannels,
-        windowedChannels.map(_.map(fftClass.compute)))}
-      .map{case (idx, calibratedChannels, fftChannels) => (idx, calibratedChannels,
-        fftChannels.map(_.map(periodogramClass.compute)))}
-      .map{case (idx, calibratedChannels, psdChannels) => (idx, calibratedChannels,
-        psdChannels.map(welchClass.compute))}
-      .map{case (idx, calibratedChannels, welchChannels) => (
-        idx,
-        welchChannels,
-        Array(welchChannels.map(energyClass.computeSPLFromPSD)),
-        calibratedChannels
-      )}
+    val welchSplCalibratedRecords = computeWelchSpl(
+      records,
+      soundSamplingRate,
+      soundCalibrationFactor
+    )
 
     computeTol(welchSplCalibratedRecords, soundSamplingRate)
   }
