@@ -56,6 +56,9 @@ dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-core" % "2.9.7"
 dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.7"
 dependencyOverrides += "com.fasterxml.jackson.module" % "jackson-module-scala_2.11" % "2.9.7"
 
+// https://mvnrepository.com/artifact/com.typesafe.play/play-json
+libraryDependencies += "com.typesafe.play" %% "play-json" % "2.7.2"
+
 // Test dependencies
 // https://mvnrepository.com/artifact/org.scalatest/scalatest_2.11
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "3.0.5" % "test"
