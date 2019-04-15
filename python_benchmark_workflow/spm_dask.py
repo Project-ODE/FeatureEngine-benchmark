@@ -50,6 +50,9 @@ N_FILES = int(sys.argv[2])
 INPUT_BASE_DIR = sys.argv[3]
 OUTPUT_BASE_DIR = sys.argv[4]
 
+# pass N_THREADS as arg even if dask is run on multi-node
+# it is required to define the results destination
+# if run in multi-node give the total number of threads used across the cluster
 N_THREADS = 1
 if (len(sys.argv) == 6):
     N_THREADS = int(sys.argv[5])
@@ -71,7 +74,7 @@ RUN_ID = DATASET_ID + "_" + "_".join(
     [str(p) for p in [SEGMENT_SIZE, WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
 
 RESULTS_DESTINATION = OUTPUT_BASE_DIR +\
-    "/results/python_dask/{}/".format(N_NODES) + RUN_ID
+    "/results/python_dask_{}/{}/".format(N_NODES, N_THREADS) + RUN_ID
 
 
 def process_file(wav_config):
