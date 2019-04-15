@@ -49,6 +49,10 @@ N_FILES = int(sys.argv[2])
 INPUT_BASE_DIR = sys.argv[3]
 OUTPUT_BASE_DIR = sys.argv[4]
 
+N_THREADS = 1
+if (len(sys.argv) == 6):
+    N_THREADS = int(sys.argv[5])
+
 DATASET_ID = "SPM{}files".format(N_FILES)
 
 WAV_FILES_LOCATION = INPUT_BASE_DIR + "/PAM/SPMAuralA2010"
@@ -125,7 +129,7 @@ if __name__ == "__main__":
 
     # To use all available cores:
     # ncpus = len(os.sched_getaffinity(0))
-    ncpus = 24
+    ncpus = N_THREADS
 
     with Pool(processes=ncpus) as pool:
         durations = pool.map(process_file, wav_configs[:N_FILES])

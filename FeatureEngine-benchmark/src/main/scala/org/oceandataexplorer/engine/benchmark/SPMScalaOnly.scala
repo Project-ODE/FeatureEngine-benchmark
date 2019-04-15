@@ -42,7 +42,7 @@ object SPMScalaOnly {
     val inputBaseDir = args(2)
     val outputBaseDir = args(3)
     // default number of thread 24
-    val nThreads = if (args.length == 4) 24 else args(4).toInt
+    val nThreads = if (args.length == 4) 1 else args(4).toInt
 
     val inputBaseDirFile = new File(inputBaseDir)
     val wavDir = new File(inputBaseDirFile.getCanonicalFile + "/PAM/SPMAuralA2010")
