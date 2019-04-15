@@ -50,6 +50,10 @@ N_FILES = int(sys.argv[2])
 INPUT_BASE_DIR = sys.argv[3]
 OUTPUT_BASE_DIR = sys.argv[4]
 
+N_THREADS = 1
+if (len(sys.argv) == 6):
+    N_THREADS = int(sys.argv[5])
+
 DATASET_ID = "SPM{}files".format(N_FILES)
 
 WAV_FILES_LOCATION = INPUT_BASE_DIR + "/PAM/SPMAuralA2010"
@@ -127,7 +131,7 @@ if __name__ == "__main__":
     else:
         cluster = LocalCluster(
             n_workers=1,
-            threads_per_worker=24,
+            threads_per_worker=N_THREADS,
             processes=False
         )
 
