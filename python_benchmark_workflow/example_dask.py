@@ -48,7 +48,7 @@ NFFT = 256
 WINDOW_OVERLAP = 128
 
 RUN_ID = DATASET_ID + "_" + "_".join(
-    [str(p) for p in [SEGMENT_DURATION, WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
+    [str(p) for p in ["1500", WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
 
 RESULTS_DESTINATION = RESOURCES_DIR + "/results/python_dask/1/" + RUN_ID
 
