@@ -27,6 +27,7 @@ from dateutil.parser import parse
 
 from signal_processing_nobb import FeatureGenerator
 from io_handlers import SoundHandler, ResultsHandler
+from utils import single_file_handler
 
 DATASET_ID = "Example"
 
@@ -35,57 +36,33 @@ WAV_FILES_LOCATION = RESOURCES_DIR + "/sounds"
 METADATA_FILE_PATH = RESOURCES_DIR + "/metadata/Example_metadata.csv"
 
 CALIBRATION_FACTOR = 0.0
-SEGMENT_SIZE = 1500
+SEGMENT_DURATION = 1.0
 WINDOW_SIZE = 256
 NFFT = 256
 WINDOW_OVERLAP = 128
 
 RUN_ID = DATASET_ID + "_" + "_".join(
-    [str(p) for p in [SEGMENT_SIZE, WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
+    [str(p) for p in [SEGMENT_DURATION, WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
 
 RESULTS_DESTINATION = RESOURCES_DIR + "/results/python_nobb/1/" + RUN_ID
 
-WAV_FILES = [{
-    "name": file_metadata[0],
-    "timestamp": parse(file_metadata[1]),
-    "sample_rate": 1500.0,
-    "wav_bits": 16,
-    "n_samples": 3587,
-    "n_channels": 1
-} for file_metadata in pd.read_csv(METADATA_FILE_PATH).values]
 
+if __name__ == "__main__":
+    configs = [{
+        "location": WAV_FILES_LOCATION,
+        "name": file_metadata[0],
+        "timestamp": parse(file_metadata[1]),
+        "sample_rate": 1500.0,
+        "wav_bits": 16,
+        "n_samples": 3587,
+        "n_channels": 1,
+        "results_destination": RESULTS_DESTINATION,
+        "calibration_factor": CALIBRATION_FACTOR,
+        "segment_duration": SEGMENT_DURATION,
+        "window_size": WINDOW_SIZE,
+        "window_overlap": WINDOW_OVERLAP,
+        "nfft": NFFT
+    } for file_metadata in pd.read_csv(METADATA_FILE_PATH).values]
 
-for wav_file in WAV_FILES:
-    sound_handler = SoundHandler(
-        WAV_FILES_LOCATION,
-        wav_file["name"],
-        wav_file["wav_bits"],
-        wav_file["sample_rate"],
-        wav_file["n_channels"],
-        wav_file["n_samples"])
-
-    feature_generator = FeatureGenerator(
-        sound_handler,
-        wav_file["timestamp"],
-        wav_file["sample_rate"],
-        CALIBRATION_FACTOR,
-        SEGMENT_SIZE,
-        WINDOW_SIZE,
-        WINDOW_OVERLAP,
-        NFFT)
-
-    results = feature_generator.generate()
-
-    # extract sound's id from sound file name
-    # (sound's name follow convention described in test/resources/README.md)
-    sound_id = wav_file["name"].split("_")[0]
-
-    resultsHandler = ResultsHandler(
-        sound_id,
-        RESULTS_DESTINATION,
-        SEGMENT_SIZE,
-        WINDOW_SIZE,
-        WINDOW_OVERLAP,
-        NFFT)
-
-    resultsHandler.write(results)
+    for config in configs:
+        single_file_handler.process_file(config)

@@ -35,6 +35,7 @@ from dask.distributed import Client, LocalCluster
 
 from signal_processing_vanilla import FeatureGenerator
 from io_handlers import SoundHandler, ResultsHandler
+from utils import single_file_handler
 
 
 # Four arguments should be passed through the argument vector:
@@ -74,48 +75,6 @@ RESULTS_DESTINATION = OUTPUT_BASE_DIR +\
     "/results/python_dask/{}/".format(N_NODES) + RUN_ID
 
 
-def process_file(wav_config):
-    print("Start processing {}".format(wav_config["name"]))
-    t_start = time.time()
-
-    sound_handler = SoundHandler(
-        WAV_FILES_LOCATION,
-        wav_config["name"],
-        wav_config["wav_bits"],
-        wav_config["sample_rate"],
-        wav_config["n_channels"])
-
-    segment_size = int(SEGMENT_DURATION * wav_config["sample_rate"])
-
-    feature_generator = FeatureGenerator(
-        sound_handler, wav_config["timestamp"],
-        wav_config["sample_rate"], CALIBRATION_FACTOR,
-        segment_size, WINDOW_SIZE, WINDOW_OVERLAP, NFFT)
-
-    results = feature_generator.generate()
-
-    # extract sound's id from sound file name
-    # (sound's name follow convention described in test/resources/README.md)
-    sound_id = wav_config["name"][:-4]
-
-    results_handler = ResultsHandler(
-        sound_id,
-        RESULTS_DESTINATION,
-        segment_size,
-        WINDOW_SIZE,
-        WINDOW_OVERLAP,
-        NFFT
-    )
-
-    results_handler.write(results)
-
-    duration = time.time() - t_start
-
-    print("Finished processing {} in {}".format(wav_config["name"], duration))
-
-    return duration
-
-
 if __name__ == "__main__":
     scheduler_file = Path(
         "/home/datawork-alloha-ode/benchmark/tmp/scheduler.json")
@@ -139,19 +98,27 @@ if __name__ == "__main__":
             cluster
         )
 
-    wav_configs = [{
+    configs = [{
+        "location": WAV_FILES_LOCATION,
         "name": file_metadata[0],
         "timestamp": parse(
             file_metadata[9] + " " + file_metadata[10] + " UTC"
         ),
         "sample_rate": 32768.0,
         "wav_bits": 16,
-        "n_channels": 1
+        "n_channels": 1,
+        "results_destination": RESULTS_DESTINATION,
+        "calibration_factor": CALIBRATION_FACTOR,
+        "segment_duration": SEGMENT_DURATION,
+        "window_size": WINDOW_SIZE,
+        "window_overlap": WINDOW_OVERLAP,
+        "nfft": NFFT
     } for file_metadata in pd.read_csv(
         METADATA_FILE_PATH, delimiter=";").values
     ]
 
-    durations = client.map(process_file, wav_configs[:N_FILES])
+    durations = client.map(
+        single_file_handler.process_file, configs[:N_FILES])
     avg_time = np.average(client.gather(durations))
 
     print(

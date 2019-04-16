@@ -34,6 +34,7 @@ from multiprocessing import Pool
 
 from signal_processing_vanilla import FeatureGenerator
 from io_handlers import SoundHandler, ResultsHandler
+from utils import single_file_handler
 
 
 # Four arguments should be passed through the argument vector:
@@ -116,6 +117,7 @@ def process_file(wav_config):
 
 if __name__ == "__main__":
     wav_configs = [{
+        "location": WAV_FILES_LOCATION,
         "name": file_metadata[0],
         "timestamp": parse(
             file_metadata[9] + " " + file_metadata[10] + " UTC"

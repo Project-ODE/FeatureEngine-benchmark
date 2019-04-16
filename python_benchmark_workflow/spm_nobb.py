@@ -29,6 +29,7 @@ from dateutil.parser import parse
 
 from signal_processing_nobb import FeatureGenerator
 from io_handlers import SoundHandler, ResultsHandler
+from utils import single_file_handler
 
 
 # Four arguments should be passed through the argument vector:
@@ -63,42 +64,25 @@ RUN_ID = DATASET_ID + "_" + "_".join(
 RESULTS_DESTINATION = OUTPUT_BASE_DIR +\
     "/results/python_vanilla/{}/".format(N_NODES) + RUN_ID
 
-WAV_FILES = [{
-    "name": file_metadata[0],
-    "timestamp": parse(file_metadata[9] + " " + file_metadata[10] + " UTC"),
-    "sample_rate": 32768.0,
-    "wav_bits": 16,
-    "n_channels": 1
-} for file_metadata in pd.read_csv(METADATA_FILE_PATH, delimiter=";").values]
 
-for wav_file in WAV_FILES[:N_FILES]:
-    sound_handler = SoundHandler(
-        WAV_FILES_LOCATION,
-        wav_file["name"],
-        wav_file["wav_bits"],
-        wav_file["sample_rate"],
-        wav_file["n_channels"])
+if __name__ == "__main__":
+    configs = [{
+        "location": WAV_FILES_LOCATION,
+        "name": file_metadata[0],
+        "timestamp": parse(
+            file_metadata[9] + " " + file_metadata[10] + " UTC"
+        ),
+        "sample_rate": 32768.0,
+        "wav_bits": 16,
+        "n_channels": 1,
+        "results_destination": RESULTS_DESTINATION,
+        "calibration_factor": CALIBRATION_FACTOR,
+        "segment_duration": SEGMENT_DURATION,
+        "window_size": WINDOW_SIZE,
+        "window_overlap": WINDOW_OVERLAP,
+        "nfft": NFFT
+    } for file_metadata in pd.read_csv(
+        METADATA_FILE_PATH, delimiter=";").values]
 
-    segment_size = int(SEGMENT_DURATION * wav_file["sample_rate"])
-
-    feature_generator = FeatureGenerator(
-        sound_handler, wav_file["timestamp"],
-        wav_file["sample_rate"], CALIBRATION_FACTOR,
-        segment_size, WINDOW_SIZE, WINDOW_OVERLAP, NFFT)
-
-    results = feature_generator.generate()
-
-    # extract sound's id from sound file name
-    # (sound's name follow convention described in test/resources/README.md)
-    sound_id = wav_file["name"][:-4]
-
-    resultsHandler = ResultsHandler(
-        sound_id,
-        RESULTS_DESTINATION,
-        segment_size,
-        WINDOW_SIZE,
-        WINDOW_OVERLAP,
-        NFFT
-    )
-
-    resultsHandler.write(results)
+    for config in configs[:N_FILES]:
+        single_file_handler.process_file(config)
