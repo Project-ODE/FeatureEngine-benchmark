@@ -66,7 +66,7 @@ RESULTS_DESTINATION = OUTPUT_BASE_DIR +\
 
 
 if __name__ == "__main__":
-    configs = [{
+    task_configs = [{
         "location": WAV_FILES_LOCATION,
         "name": file_metadata[0],
         "timestamp": parse(
@@ -84,5 +84,5 @@ if __name__ == "__main__":
     } for file_metadata in pd.read_csv(
         METADATA_FILE_PATH, delimiter=";").values]
 
-    for config in configs[:N_FILES]:
+    for config in task_configs[:N_FILES]:
         single_file_handler.process_file(config)

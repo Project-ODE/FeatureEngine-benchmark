@@ -38,18 +38,19 @@ METADATA_FILE_PATH = RESOURCES_DIR + "/metadata/Example_metadata.csv"
 
 CALIBRATION_FACTOR = 0.0
 SEGMENT_DURATION = 1.0
+SEGMENT_SIZE = 1500
 WINDOW_SIZE = 256
 NFFT = 256
 WINDOW_OVERLAP = 128
 
 RUN_ID = DATASET_ID + "_" + "_".join(
-    [str(p) for p in ["1500", WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
+    [str(p) for p in [SEGMENT_SIZE, WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
 
 RESULTS_DESTINATION = RESOURCES_DIR + "/results/python_vanilla/1/" + RUN_ID
 
 
 if __name__ == "__main__":
-    configs = [{
+    task_configs = [{
         "location": WAV_FILES_LOCATION,
         "name": file_metadata[0],
         "timestamp": parse(file_metadata[1]),
@@ -65,5 +66,5 @@ if __name__ == "__main__":
         "nfft": NFFT
     } for file_metadata in pd.read_csv(METADATA_FILE_PATH).values]
 
-    for config in configs:
+    for config in task_configs:
         single_file_handler.process_file(config)

@@ -116,7 +116,7 @@ def process_file(wav_config):
 
 
 if __name__ == "__main__":
-    wav_configs = [{
+    wav_task_configs = [{
         "location": WAV_FILES_LOCATION,
         "name": file_metadata[0],
         "timestamp": parse(
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     ncpus = N_THREADS
 
     with Pool(processes=ncpus) as pool:
-        durations = pool.map(process_file, wav_configs[:N_FILES])
+        durations = pool.map(process_file, wav_task_configs[:N_FILES])
         print(
             "\nFinished job, processing file take {} sec avg"
             .format(np.average(durations))

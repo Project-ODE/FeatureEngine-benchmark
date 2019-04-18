@@ -29,48 +29,48 @@ from signal_processing_vanilla import FeatureGenerator
 from io_handlers import SoundHandler, ResultsHandler
 
 
-def process_file(config):
-    print("Start processing {}".format(config["name"]))
+def process_file(task_config):
+    print("Start processing {}".format(task_config["name"]))
     tStart = time()
 
     sound_handler = SoundHandler(
-        config["location"],
-        config["name"],
-        config["wav_bits"],
-        config["sample_rate"],
-        config["n_channels"])
+        task_config["location"],
+        task_config["name"],
+        task_config["wav_bits"],
+        task_config["sample_rate"],
+        task_config["n_channels"])
 
-    segment_size = int(config["segment_duration"] * config["sample_rate"])
+    segment_size = int(task_config["segment_duration"] * task_config["sample_rate"])
 
     feature_generator = FeatureGenerator(
         sound_handler,
-        config["timestamp"],
-        config["sample_rate"],
-        config["calibration_factor"],
+        task_config["timestamp"],
+        task_config["sample_rate"],
+        task_config["calibration_factor"],
         segment_size,
-        config["window_size"],
-        config["window_overlap"],
-        config["nfft"]
+        task_config["window_size"],
+        task_config["window_overlap"],
+        task_config["nfft"]
     )
 
     results = feature_generator.generate()
 
     # extract sound's id from sound file name
     # (sound's name follow convention described in test/resources/README.md)
-    sound_id = config["name"][:-4]
+    sound_id = task_config["name"][:-4]
 
     resultsHandler = ResultsHandler(
         sound_id,
-        config["results_destination"],
+        task_config["results_destination"],
         segment_size,
-        config["window_size"],
-        config["window_overlap"],
-        config["nfft"]
+        task_config["window_size"],
+        task_config["window_overlap"],
+        task_config["nfft"]
     )
 
     resultsHandler.write(results)
 
     duration = time() - tStart
-    print("Finished processing {} in {}".format(config["name"], duration))
+    print("Finished processing {} in {}".format(task_config["name"], duration))
 
     return duration

@@ -98,7 +98,7 @@ if __name__ == "__main__":
             cluster
         )
 
-    configs = [{
+    task_configs = [{
         "location": WAV_FILES_LOCATION,
         "name": file_metadata[0],
         "timestamp": parse(
@@ -118,7 +118,7 @@ if __name__ == "__main__":
     ]
 
     durations = client.map(
-        single_file_handler.process_file, configs[:N_FILES])
+        single_file_handler.process_file, task_configs[:N_FILES])
     avg_time = np.average(client.gather(durations))
 
     print(
