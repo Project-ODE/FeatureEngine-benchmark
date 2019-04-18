@@ -84,5 +84,5 @@ if __name__ == "__main__":
     } for file_metadata in pd.read_csv(
         METADATA_FILE_PATH, delimiter=";").values]
 
-    for config in task_configs[:N_FILES]:
-        single_file_handler.process_file(config)
+    for task_config in task_configs[:N_FILES]:
+        single_file_handler.process_file(task_config)

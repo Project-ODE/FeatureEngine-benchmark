@@ -66,5 +66,5 @@ if __name__ == "__main__":
         "nfft": NFFT
     } for file_metadata in pd.read_csv(METADATA_FILE_PATH).values]
 
-    for config in task_configs:
-        single_file_handler.process_file(config)
+    for task_config in task_configs:
+        single_file_handler.process_file(task_config)
