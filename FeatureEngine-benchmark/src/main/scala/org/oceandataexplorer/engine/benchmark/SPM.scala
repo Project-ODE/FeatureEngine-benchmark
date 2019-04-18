@@ -121,7 +121,6 @@ object SPM {
 
     val calibratedRecords: RDD[Record] = records
       .mapValues(chan => chan.map(calibrationClass.compute))
-      .persist(StorageLevel.MEMORY_AND_DISK)
 
     val welchSplWorkflow = new WelchSplWorkflow(
       spark,
