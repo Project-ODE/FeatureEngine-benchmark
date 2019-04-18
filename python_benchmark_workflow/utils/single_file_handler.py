@@ -40,7 +40,8 @@ def process_file(task_config):
         task_config["sample_rate"],
         task_config["n_channels"])
 
-    segment_size = int(task_config["segment_duration"] * task_config["sample_rate"])
+    segment_size = int(
+        task_config["segment_duration"] * task_config["sample_rate"])
 
     feature_generator = FeatureGenerator(
         sound_handler,
