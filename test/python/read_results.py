@@ -39,6 +39,11 @@ def _read_json_files(res_dir):
     results_dfs = []
     files_path = glob.glob(res_dir + "/*.json")
 
+    if (len(files_path) == 0):
+        raise Exception(
+            "Error reading results - No results were found in {}".format(res_dir)
+        )
+
     for file_path in files_path:
         results_dfs.append(pd.read_json(
             file_path,

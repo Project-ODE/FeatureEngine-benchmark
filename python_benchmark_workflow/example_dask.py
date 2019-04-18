@@ -32,6 +32,8 @@ from dask.distributed import Client, LocalCluster
 
 from signal_processing_vanilla import FeatureGenerator
 from io_handlers import SoundHandler, ResultsHandler
+from utils import single_file_handler
+
 
 DATASET_ID = "Example"
 
@@ -40,6 +42,7 @@ WAV_FILES_LOCATION = RESOURCES_DIR + "/sounds"
 METADATA_FILE_PATH = RESOURCES_DIR + "/metadata/Example_metadata.csv"
 
 CALIBRATION_FACTOR = 0.0
+SEGMENT_DURATION = 1.0
 SEGMENT_SIZE = 1500
 WINDOW_SIZE = 256
 NFFT = 256
@@ -51,57 +54,21 @@ RUN_ID = DATASET_ID + "_" + "_".join(
 RESULTS_DESTINATION = RESOURCES_DIR + "/results/python_dask/1/" + RUN_ID
 
 
-def process_file(wav_config):
-    t_start = time.time()
-
-    sound_handler = SoundHandler(
-        WAV_FILES_LOCATION,
-        wav_config["name"],
-        wav_config["wav_bits"],
-        wav_config["sample_rate"],
-        wav_config["n_channels"],
-        wav_config["n_samples"])
-
-    feature_generator = FeatureGenerator(
-        sound_handler,
-        wav_config["timestamp"],
-        wav_config["sample_rate"],
-        CALIBRATION_FACTOR,
-        SEGMENT_SIZE,
-        WINDOW_SIZE,
-        WINDOW_OVERLAP,
-        NFFT)
-
-    results = feature_generator.generate()
-
-    # extract sound's id from sound file name
-    # (sound's name follow convention described in test/resources/README.md)
-    sound_id = wav_config["name"].split("_")[0]
-
-    results_handler = ResultsHandler(
-        sound_id,
-        RESULTS_DESTINATION,
-        SEGMENT_SIZE,
-        WINDOW_SIZE,
-        WINDOW_OVERLAP,
-        NFFT
-    )
-
-    results_handler.write(results)
-
-    duration = time.time() - t_start
-
-    return duration
-
-
 if __name__ == "__main__":
-    wav_configs = [{
+    task_configs = [{
+        "location": WAV_FILES_LOCATION,
         "name": file_metadata[0],
         "timestamp": parse(file_metadata[1]),
         "sample_rate": 1500.0,
         "wav_bits": 16,
         "n_samples": 3587,
-        "n_channels": 1
+        "n_channels": 1,
+        "results_destination": RESULTS_DESTINATION,
+        "calibration_factor": CALIBRATION_FACTOR,
+        "segment_duration": SEGMENT_DURATION,
+        "window_size": WINDOW_SIZE,
+        "window_overlap": WINDOW_OVERLAP,
+        "nfft": NFFT
     } for file_metadata in pd.read_csv(METADATA_FILE_PATH).values]
 
     ncpus = len(os.sched_getaffinity(0))
@@ -116,5 +83,5 @@ if __name__ == "__main__":
         cluster
     )
 
-    durations = client.map(process_file, wav_configs)
+    durations = client.map(single_file_handler.process_file, task_configs)
     avg_time = np.average(client.gather(durations))
