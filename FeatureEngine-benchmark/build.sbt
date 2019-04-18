@@ -42,7 +42,7 @@ resolvers += "Ode FeatureEngine Repository" at "https://github.com/Project-ODE/F
 libraryDependencies += "org.scala-lang" % "scala-library" % "2.11.12"
 
 // https://github.com/Project-ODE/FeatureEngine
-libraryDependencies += "org.oceandataexplorer" % "featureengine_2.11" % "0.4"
+libraryDependencies += "org.oceandataexplorer" % "featureengine_2.11" % "0.5"
 
 // Spark provided dependencies
 // https://mvnrepository.com/artifact/org.apache.spark/spark-core_2.11

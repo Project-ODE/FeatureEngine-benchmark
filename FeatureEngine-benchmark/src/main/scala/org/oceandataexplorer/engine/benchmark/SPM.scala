@@ -68,8 +68,8 @@ object SPM {
     val windowSize = 256
     val windowOverlap = 128
     val nfft = 256
-    val lowFreq = Some(0.2 * soundSamplingRate)
-    val highFreq = Some(0.4 * soundSamplingRate)
+    val lowFreqTOL = Some(0.2 * soundSamplingRate)
+    val highFreqTOL = Some(0.4 * soundSamplingRate)
 
     // Sound parameters
     val soundPath = wavDir.getCanonicalFile.toURI.toString
@@ -122,37 +122,22 @@ object SPM {
     val calibratedRecords: RDD[Record] = records
       .mapValues(chan => chan.map(calibrationClass.compute))
 
-    val welchSplWorkflow = new WelchSplWorkflow(
+    val welchSplTolWorkflow = new WelchSplTolWorkflow(
       spark,
       recordSizeInSec,
       windowSize,
       windowOverlap,
-      nfft
+      nfft,
+      lowFreqTOL,
+      highFreqTOL
     )
 
-    val welchsSpls = welchSplWorkflow(
+    val welchsSplsTols = welchSplTolWorkflow(
       calibratedRecords,
       soundSamplingRate
     )
 
-    val tolWorkflow = new TolWorkflow(
-      spark,
-      recordSizeInSec,
-      lowFreq,
-      highFreq
-    )
-
-    val tols = tolWorkflow(
-      calibratedRecords,
-      soundSamplingRate
-    )
-
-    import spark.implicits._
-
-    welchsSpls
-      .join(tols, tols("timestamp") === welchsSpls("timestamp"))
-      .drop(tols("timestamp"))
-      .sort($"timestamp")
+    welchsSplsTols
       .write
       .json(resultsDestination)
 
