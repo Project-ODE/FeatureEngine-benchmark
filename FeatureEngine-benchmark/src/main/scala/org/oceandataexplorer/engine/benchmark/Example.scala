@@ -93,38 +93,22 @@ object Example {
 
     val calibratedRecords: RDD[Record] = records.mapValues(chan => chan.map(calibrationClass.compute))
 
-    val welchSplWorkflow = new WelchSplWorkflow(
+    val welchSplTolWorkflow = new WelchSplTolWorkflow(
       spark,
       recordSizeInSec,
       windowSize,
       windowOverlap,
-      nfft
-    )
-
-    val welchsSpls = welchSplWorkflow(
-      calibratedRecords,
-      soundSamplingRate
-    )
-
-    val tolWorkflow = new TolWorkflow(
-      spark,
-      recordSizeInSec,
+      nfft,
       lowFreqTOL,
       highFreqTOL
     )
 
-    val tols = tolWorkflow(
+    val welchsSplsTols = welchSplTolWorkflow(
       calibratedRecords,
       soundSamplingRate
     )
 
-    import spark.implicits._
-
-    welchsSpls
-      .join(tols, tols("timestamp") === welchsSpls("timestamp"))
-      .drop(tols("timestamp"))
-      .repartition(1)
-      .sort($"timestamp")
+    welchsSplsTols
       .write
       .json(resultsDestination)
 
