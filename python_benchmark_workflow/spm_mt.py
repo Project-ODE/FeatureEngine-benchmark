@@ -70,7 +70,7 @@ RUN_ID = DATASET_ID + "_" + "_".join(
     [str(p) for p in [SEGMENT_SIZE, WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
 
 RESULTS_DESTINATION = OUTPUT_BASE_DIR +\
-    "/results/python_mt/{}/".format(N_NODES) + RUN_ID
+    "/results/python_mt_{}/{}/".format(N_NODES, N_THREADS) + RUN_ID
 
 
 def process_file(wav_config):
