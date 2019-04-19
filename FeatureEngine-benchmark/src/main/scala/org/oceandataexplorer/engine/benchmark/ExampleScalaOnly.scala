@@ -42,7 +42,6 @@ object ExampleScalaOnly {
     // Signal processing parameters
     val soundSamplingRate = 1500.0f
     val recordSizeInSec = 1.0f
-    val recordSizeInFrame = (soundSamplingRate * recordSizeInSec).toInt
     val windowSize = 256
     val windowOverlap = 128
     val nfft = 256
@@ -61,7 +60,7 @@ object ExampleScalaOnly {
     val soundChannels = 1
     val soundSampleSizeInBits = 16
 
-    val runId = s"Example_${recordSizeInFrame}_${windowSize}_${windowOverlap}_$nfft"
+    val runId = s"Example_${recordSizeInSec}_${windowSize}_${windowOverlap}_$nfft"
 
     val resultsDestination = resourcesDir.getCanonicalFile.toURI.toString +
       "results/scala_only/1/" + runId

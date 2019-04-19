@@ -53,12 +53,10 @@ windowOverlap = 128;
 lowFreqTOL = 0.2 * 1500;
 highFreqTOL = 0.4 * 1500;
 
-segmentSize = fix(sampleRate * segmentDuration);
-
 windowFunction = hamming(windowSize, 'periodic'); % window used for windowing
 
 runId = char(strcat(...
-    'Example_', string(segmentSize), '_', string(windowSize),...
+    'Example_', num2str(segmentDuration, '%1.1f'), '_', string(windowSize),...
     '_', string(windowOverlap), '_', string(nfft)));
 
 %% read wavFilesMetadata
