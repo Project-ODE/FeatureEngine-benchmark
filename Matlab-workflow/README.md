@@ -8,3 +8,6 @@ used to measure matlab performance.
 Currently, the following version are implemented:
 -_vanilla_ - simplest implementation of the workflow that doesn't parallelize
 nor distribute conputation and has multiple limitations.
+
+-_mt_ - trivial multi-threaded approach, it is based on _vanilla_ but
+processes multiple files simultaneously using matlab parfor.

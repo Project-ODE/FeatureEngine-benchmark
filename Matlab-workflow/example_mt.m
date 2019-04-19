@@ -19,8 +19,8 @@
 
 %% Example script of the benchmark
 % It run on the test data located at FeatureEngine-benchmark/test/resources
-% to run it in cli use: `matlab -nodisplay -nosplash -nodesktop -r "example_vanilla"`
-function [] = example_vanilla()
+% to run it in cli use: `matlab -nodisplay -nosplash -nodesktop -r "example_mt"`
+function [] = example_mt()
 
 % clear everything, for test only.
 % it also deletes any arguments passed to the script !
@@ -74,7 +74,7 @@ fclose(fid);
 %% define data location
 
 resultsLocation = strcat('..', filesep, 'test', filesep,...
-    'resources', filesep, 'results', filesep, 'matlab_vanilla', filesep,...
+    'resources', filesep, 'results', filesep, 'matlab_mt', filesep,...
     '1', filesep, runId);
 
 wavFilesLocation = strcat('..', filesep, 'test', filesep,...
@@ -89,9 +89,11 @@ if (exist(resultsLocation, 'dir') == 0)
     mkdir(resultsLocation);
 end
 
+threadPool = parpool(2);
+
 %% Compute & Write results
 
-for iFile = 1 : length(wavFiles.name)
+parfor iFile = 1 : length(wavFiles.name)
     startDateInMatlabTime = datenum(...
         char(wavFiles.timestamp(iFile)),...
         'yyyy-mm-ddTHH:MM:SSZ');
@@ -124,6 +126,8 @@ for iFile = 1 : length(wavFiles.name)
     fclose(fd);
 
 end
+
+delete(threadPool)
 
 %% Compute elapsed time
 
