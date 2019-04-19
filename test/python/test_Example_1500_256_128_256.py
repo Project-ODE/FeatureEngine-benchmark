@@ -40,6 +40,7 @@ VERSION_LIST = [
     "scala_only",
     "python_vanilla",
     "matlab_vanilla",
+    "matlab_mt",
     "python_nobb",
     "python_mt",
     "python_dask"
