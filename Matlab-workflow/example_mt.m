@@ -19,8 +19,8 @@
 
 %% Example script of the benchmark
 % It run on the test data located at FeatureEngine-benchmark/test/resources
-% to run it in cli use: `matlab -nodisplay -nosplash -nodesktop -r "example"`
-function [] = example()
+% to run it in cli use: `matlab -nodisplay -nosplash -nodesktop -r "example_mt"`
+function [] = example_mt()
 
 % clear everything, for test only.
 % it also deletes any arguments passed to the script !
@@ -106,9 +106,9 @@ parfor iFile = 1 : length(wavFiles.name)
         segmentDuration, windowSize, windowOverlap, windowFunction,...
         nfft, lowFreqTOL, highFreqTOL);
 
-    soundNameSplitted = split(string(wavFiles.name(iFile)), "_");
+    soundNameSplitted = split(string(wavFiles.name(iFile)), '_');
     soundId = char(strcat(soundNameSplitted(1), '_', string(1500),...
-        "_", string(windowSize), "_", string(windowOverlap), "_",...
+        '_', string(windowSize), '_', string(windowOverlap), '_',...
         string(nfft)));
 
     resultFile = strcat(resultsLocation, filesep,...
