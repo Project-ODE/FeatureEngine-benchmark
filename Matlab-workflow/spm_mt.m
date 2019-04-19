@@ -92,7 +92,7 @@ if (exist(resultsLocation, 'dir') == 0)
     mkdir(resultsLocation);
 end
 
-threadPool = parpool(nThreads);
+threadPool = parpool(str2num(nThreads));
 
 %% Compute & Write results
 
