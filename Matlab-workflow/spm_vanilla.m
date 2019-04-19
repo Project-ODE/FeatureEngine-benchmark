@@ -18,10 +18,10 @@
 
 
 %% SPM script of the benchmark
-% to run it in cli use: `matlab -nodisplay -nosplash -nodesktop -r 'example'`
+% to run it in cli use: `matlab -nodisplay -nosplash -nodesktop -r 'spm_vanilla nNodes nFiles inputBaseDir outputBaseDir'`
 
 
-function [] = spm(nNodes, nFiles, inputBaseDir, outputBaseDir)
+function [] = spm_vanilla(nNodes, nFiles, inputBaseDir, outputBaseDir)
 % Four arguments should be passed:
 %   - nNodes: The number of datarmor nodes used in this run as a Int.
 %   - nFiles: The number of SPM wav files to be processed in this run as a Int.

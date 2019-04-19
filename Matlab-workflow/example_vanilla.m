@@ -19,8 +19,8 @@
 
 %% Example script of the benchmark
 % It run on the test data located at FeatureEngine-benchmark/test/resources
-% to run it in cli use: `matlab -nodisplay -nosplash -nodesktop -r "example"`
-function [] = example()
+% to run it in cli use: `matlab -nodisplay -nosplash -nodesktop -r "example_vanilla"`
+function [] = example_vanilla()
 
 % clear everything, for test only.
 % it also deletes any arguments passed to the script !
