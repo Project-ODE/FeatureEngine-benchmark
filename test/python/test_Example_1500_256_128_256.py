@@ -51,14 +51,14 @@ N_NODES_COMPUTED = [1]
 DATASET_ID = "Example"
 SOUND_IDS = ["Example0", "Example1"]
 
-SEGMENT_SIZE = 1500
+SEGMENT_DURATION = 1.0
 WINDOW_SIZE = 256
 WINDOW_OVERLAP = 128
 NFFT = 256
 
 
 RUN_ID = DATASET_ID + "_" +"_".join(
-    [str(p) for p in [SEGMENT_SIZE, WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
+    [str(p) for p in [SEGMENT_DURATION, WINDOW_SIZE, WINDOW_OVERLAP, NFFT]])
 
 if __name__ == "__main__":
     for n_nodes in N_NODES_COMPUTED:
