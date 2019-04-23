@@ -74,7 +74,7 @@ object Example {
     val runId = s"Example_${recordSizeInFrame}_${windowSize}_${windowOverlap}_${nfft}"
 
     val resultsDestination = resourcesDir.getCanonicalFile.toURI.toString +
-      "/results/feature_engine_benchmark/1/" + runId
+      "/results/scala_fe/1/" + runId
 
     val hadoopWavReader = new HadoopWavReader(
       spark,

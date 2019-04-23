@@ -102,7 +102,7 @@ object SPM {
     val runId = s"SPM${nFiles}files_${recordSizeInFrame}_${windowSize}_${windowOverlap}_$nfft"
 
     val resultsDestination = outputBaseDirFile.getCanonicalFile.toURI.toString +
-      s"/results/feature_engine_benchmark/$nNodes/" + runId
+      s"/results/scala_fe/$nNodes/" + runId
 
     val hadoopWavReader = new HadoopWavReader(
       spark,

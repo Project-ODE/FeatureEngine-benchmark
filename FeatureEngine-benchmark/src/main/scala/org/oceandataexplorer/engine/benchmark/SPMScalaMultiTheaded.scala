@@ -29,9 +29,9 @@ import scala.collection.parallel._
 // scalastyle:off
 
 /**
- * Scala Only Benchmark main object
+ * Scala Multi-theaded Benchmark main object
  */
-object SPMScalaOnly {
+object SPMScalaMultiThreaded {
   /**
    * Function runnning benchmark workflow on the SPM Dataset
    * @param args The arguments for the run
@@ -89,7 +89,7 @@ object SPMScalaOnly {
     val runId = s"SPM${nFiles}files_${recordSizeInFrame}_${windowSize}_${windowOverlap}_$nfft"
 
     val resultsDestination = outputBaseDirFile.getCanonicalFile.toURI.toString +
-      s"/results/scala_only_$nThreads/$nNodes/" + runId
+      s"/results/scala_mt_$nThreads/$nNodes/" + runId
 
     val resultDestinationFile = new File(new URI(resultsDestination))
 

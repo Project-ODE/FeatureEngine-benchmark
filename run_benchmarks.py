@@ -101,7 +101,7 @@ class SparkAbstractBenchmark(ScalaAbstractBenchmark, ABC):
     ]
 
 class FEMinBenchmark(SparkAbstractBenchmark):
-    VERSION = "feature_engine_benchmark_min"
+    VERSION = "scala_femin"
 
     SPARK_PARAMS = SparkAbstractBenchmark.SPARK_PARAMS + [
         "--executor-cores 1",
@@ -114,7 +114,7 @@ class FEMinBenchmark(SparkAbstractBenchmark):
 
 
 class FEBenchmark(SparkAbstractBenchmark):
-    VERSION = "feature_engine_benchmark"
+    VERSION = "scala_fe"
 
     SPARK_PARAMS = SparkAbstractBenchmark.SPARK_PARAMS + [
         "--executor-cores 1",
@@ -139,7 +139,7 @@ class ScalaMultiThreadedBenchmark(ScalaAbstractBenchmark):
     N_THREADS = 1
 
     BASE_COMMAND =  "java -Xms64g -Xmx100g -classpath " + ScalaAbstractBenchmark.JAR_LOCATION\
-            + "org.oceandataexplorer.engine.benchmark.SPMScalaOnly {} "
+            + "org.oceandataexplorer.engine.benchmark.SPMScalaMultiThreaded {} "
 
 
 

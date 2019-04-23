@@ -36,8 +36,8 @@ N_CHANNELS = 1
 
 RESULTS_ROOT_DIR = "../resources/results"
 VERSION_LIST = [
-    "feature_engine_benchmark",
-    "scala_only",
+    "scala_fe",
+    "scala_mt",
     "python_vanilla",
     "matlab_vanilla",
     "matlab_mt",
