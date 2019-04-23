@@ -100,22 +100,6 @@ class SparkAbstractBenchmark(ScalaAbstractBenchmark, ABC):
             + ".fileinputformat.split.minsize=268435456"
     ]
 
-
-class FEBenchmark(SparkAbstractBenchmark):
-    VERSION = "feature_engine_benchmark"
-
-    SPARK_PARAMS = SparkAbstractBenchmark.SPARK_PARAMS + [
-        "--executor-cores 1",
-        "--executor-memory 80G"
-    ]
-
-    def __init__(self, n_nodes, n_files, input_base_dir, output_base_dir, **kwargs):
-        super(FEBenchmark, self).__init__(n_nodes, n_files, input_base_dir, output_base_dir, **kwargs)
-        self.SPARK_PARAMS = FEBenchmark.SPARK_PARAMS + ["--num-executors {}".format(17 * n_nodes)]
-        self.BASE_COMMAND = "spark-submit " + " ".join(self.SPARK_PARAMS)\
-            + ScalaAbstractBenchmark.JAR_LOCATION + " {}"
-
-
 class FEMinBenchmark(SparkAbstractBenchmark):
     VERSION = "feature_engine_benchmark_min"
 
@@ -127,6 +111,25 @@ class FEMinBenchmark(SparkAbstractBenchmark):
 
     BASE_COMMAND = "spark-submit " + " ".join(SPARK_PARAMS)\
         + ScalaAbstractBenchmark.JAR_LOCATION + " {}"
+
+
+class FEBenchmark(SparkAbstractBenchmark):
+    VERSION = "feature_engine_benchmark"
+
+    SPARK_PARAMS = SparkAbstractBenchmark.SPARK_PARAMS + [
+        "--executor-cores 1",
+        "--executor-memory 80G"
+    ]
+
+    def __init__(self, n_nodes, n_files, input_base_dir, output_base_dir, **kwargs):
+        super(FEBenchmark, self).__init__(n_nodes, n_files, input_base_dir, output_base_dir, **kwargs)
+
+        # n_nodes is known only at runtime so `SPARK_PARAMS` must be completed with the number of executors
+        # that depends on n_nodes. `BASE_COMMAND` contains spark parameters so it is also defined here.
+        self.SPARK_PARAMS = FEBenchmark.SPARK_PARAMS + ["--num-executors {}".format(17 * n_nodes)]
+        self.BASE_COMMAND = "spark-submit " + " ".join(self.SPARK_PARAMS)\
+            + ScalaAbstractBenchmark.JAR_LOCATION + " {}"
+
 
 class ScalaMultiThreadedBenchmark(ScalaAbstractBenchmark):
     # "scala_mt" designates single threaded runs, equivalent to "scala_mt_1"
@@ -225,16 +228,16 @@ class BenchmarkManager(object):
         f.close()
 
 
-def new_mt_run(MTBaseClass, n_threads):
+def new_mt_benchmark(MultiThreadedBaseClass, n_threads):
     """
     Creates new multi-threaded benchmark classes given a number of threads
     """
     return type(
-        MTBaseClass.VERSION + "_{}".format(n_threads),
-        (MTBaseClass,),
+        MultiThreadedBaseClass.VERSION + "_{}".format(n_threads),
+        (MultiThreadedBaseClass,),
         {
             'N_THREADS': n_threads,
-            'VERSION': MTBaseClass.VERSION + "_{}".format(n_threads)
+            'VERSION': MultiThreadedBaseClass.VERSION + "_{}".format(n_threads)
         }
     )
 
@@ -259,9 +262,9 @@ if __name__ == "__main__":
         FEMinBenchmark,
         PythonVanillaBenchmark,
         PythonNoBBBenchmark,
-        new_mt_run(PythonMultiThreadedBenchmark, 2),
+        new_mt_benchmark(PythonMultiThreadedBenchmark, 2),
         MatlabVanillaBenchmark,
-        new_mt_run(MatlabMultiThreadedBenchmark, 2)
+        new_mt_benchmark(MatlabMultiThreadedBenchmark, 2)
     ]
 
     # optionals arguments for benchmark
