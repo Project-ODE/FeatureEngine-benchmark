@@ -18,10 +18,19 @@
 
 # Authors: Alexandre Degurse
 
+"""Run bechmarks script.
+
+Usage: run_benchmarks.py [options] N_NODES INPUT_BASE_DIR OUTPUT_BASE_DIR [TAG]
+
+Options:
+    -n --dry-run    Do not execute benchmark, simply prompt the commands that should be run.
+"""
+
 import os, sys
 from subprocess import Popen
 from time import time
 from abc import ABC
+from docopt import docopt
 
 
 def announce(s):
@@ -230,17 +239,12 @@ def new_mt_run(MTBaseClass, n_threads):
     )
 
 if __name__ == "__main__":
-    if (len(sys.argv) < 4):
-        print("Invalid syntax\nUsage: python3 run_benchmark.py n_nodes indir outdir")
-        exit(1)
+    arguments = docopt(__doc__)
 
-    n_nodes = int(sys.argv[1])
-    input_base_dir = sys.argv[2]
-    output_base_dir = sys.argv[3]
-
-    tag = 'notag'
-    if (len(sys.argv) == 5):
-        tag = sys.argv[4]
+    n_nodes = int(arguments["N_NODES"])
+    input_base_dir = arguments["INPUT_BASE_DIR"]
+    output_base_dir = arguments["OUTPUT_BASE_DIR"]
+    dry_run = arguments["--dry-run"]
 
     runs = {
         1: [1, 2, 5, 10, 25, 50, 75, 100],
@@ -262,7 +266,7 @@ if __name__ == "__main__":
 
     # optionals arguments for benchmark
     extra_args = {
-        #'dry_run': True
+        'dry_run': dry_run
     }
 
     benchmarks = BenchmarkManager(
@@ -276,6 +280,9 @@ if __name__ == "__main__":
 
     benchmarks.run_benchmarks()
 
-    if not extra_args.get('dry_run', False):
+    if not dry_run:
         benchmarks.save_as_csv(
-            output_base_dir + "/times/benchmark_durations_{}node_{}.csv".format(n_nodes, tag))
+            output_base_dir + "/times/benchmark_durations_{}node_{}.csv".format(
+                n_nodes, arguments["TAG"]
+            )
+        )
