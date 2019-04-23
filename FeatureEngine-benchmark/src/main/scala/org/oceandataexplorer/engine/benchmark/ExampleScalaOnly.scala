@@ -29,7 +29,7 @@ import scala.concurrent.forkjoin.ForkJoinPool
 /**
  * Benchmark workflow main object
  */
-object ExampleScalaOnly {
+object ExampleScalaMultiThreaded {
   /**
    * Function runnning benchmark workflow on example files
    * @param args The arguments for the run
@@ -64,7 +64,7 @@ object ExampleScalaOnly {
     val runId = s"Example_${recordSizeInFrame}_${windowSize}_${windowOverlap}_$nfft"
 
     val resultsDestination = resourcesDir.getCanonicalFile.toURI.toString +
-      "results/scala_only/1/" + runId
+      "results/scala_mt/1/" + runId
 
     val resultDestinationFile = new File(new URI(resultsDestination))
 

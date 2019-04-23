@@ -4,8 +4,7 @@
 
 # ignore results expect matlab's that needs to be stored
 test/resources/results/python*
-test/resources/results/feature_engine_benchmark
-test/resources/results/scala_only
+test/resources/results/scala*
 
 *.pyc
 __pycache__
