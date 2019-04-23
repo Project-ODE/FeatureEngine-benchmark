@@ -21,7 +21,7 @@
 import os, sys
 from subprocess import Popen
 from time import time
-from abc import ABC, abstractmethod
+from abc import ABC
 
 
 def announce(s):
@@ -45,9 +45,9 @@ class Benchmark(ABC):
         if hasattr(self, 'N_THREADS'):
             self.job_params.append(str(self.N_THREADS))
 
+    def run(self):
         self.run_command = self.BASE_COMMAND.format(" ".join(self.job_params))
 
-    def run(self):
         announce("Starting {} benchmark with {} files".format(self.VERSION, self.n_files))
         print("Running command: {}".format(self.run_command))
         sys.stdout.flush()
@@ -77,61 +77,56 @@ class Benchmark(ABC):
             str(self.duration)
         ]
 
-class FEBenchmark(Benchmark):
-    VERSION = "feature_engine_benchmark"
-
-    SPARK_PARAMS = [
-        "--driver-memory 4G",
-        "--executor-cores 3",
-        "--num-executors 17",
-        "--executor-memory 5500M",
-        "--class org.oceandataexplorer.engine.benchmark.SPM",
-        "--conf spark.hadoop.mapreduce.input"\
-            + ".fileinputformat.split.minsize=268435456"
-    ]
-
-    FE_JAR_LOCATION = (
+class ScalaAbstractBenchmark(Benchmark, ABC):
+    JAR_LOCATION = (
         " FeatureEngine-benchmark/target/scala-2.11/"
         "FeatureEngine-benchmark-assembly-0.1.jar "
     )
 
-    BASE_COMMAND = "spark-submit " + " ".join(SPARK_PARAMS)\
-        + FE_JAR_LOCATION + " {}"
-
-class FEMinBenchmark(Benchmark):
-    VERSION = "feature_engine_benchmark_min"
-
+class SparkAbstractBenchmark(ScalaAbstractBenchmark, ABC):
     SPARK_PARAMS = [
         "--driver-memory 4G",
-        "--executor-cores 1",
-        "--num-executors 1 ",
-        "--executor-memory 80G",
         "--class org.oceandataexplorer.engine.benchmark.SPM",
         "--conf spark.hadoop.mapreduce.input"\
             + ".fileinputformat.split.minsize=268435456"
     ]
 
-    FE_JAR_LOCATION = (
-        " FeatureEngine-benchmark/target/"
-        "scala-2.11/FeatureEngine-benchmark-assembly-0.1.jar "
-    )
+
+class FEBenchmark(SparkAbstractBenchmark):
+    VERSION = "feature_engine_benchmark"
+
+    SPARK_PARAMS = SparkAbstractBenchmark.SPARK_PARAMS + [
+        "--executor-cores 1",
+        "--executor-memory 80G"
+    ]
+
+    def __init__(self, n_nodes, n_files, input_base_dir, output_base_dir, **kwargs):
+        super(FEBenchmark, self).__init__(n_nodes, n_files, input_base_dir, output_base_dir, **kwargs)
+        self.SPARK_PARAMS = FEBenchmark.SPARK_PARAMS + ["--num-executors {}".format(17 * n_nodes)]
+        self.BASE_COMMAND = "spark-submit " + " ".join(self.SPARK_PARAMS)\
+            + ScalaAbstractBenchmark.JAR_LOCATION + " {}"
+
+
+class FEMinBenchmark(SparkAbstractBenchmark):
+    VERSION = "feature_engine_benchmark_min"
+
+    SPARK_PARAMS = SparkAbstractBenchmark.SPARK_PARAMS + [
+        "--executor-cores 1",
+        "--num-executors 1",
+        "--executor-memory 80G"
+    ]
 
     BASE_COMMAND = "spark-submit " + " ".join(SPARK_PARAMS)\
-        + FE_JAR_LOCATION + " {}"
+        + ScalaAbstractBenchmark.JAR_LOCATION + " {}"
 
-class ScalaOnlyBenchmark(Benchmark):
-    # "scala_only" designates single threaded runs, equivalent to "scala_only_1"
-    VERSION = "scala_only"
+class ScalaMultiThreadedBenchmark(ScalaAbstractBenchmark):
+    # "scala_mt" designates single threaded runs, equivalent to "scala_mt_1"
+    VERSION = "scala_mt"
     # number of threads used is statically defined,
     # subclassing and overriding is the recommended way to change it
     N_THREADS = 1
 
-    JAR_LOCATION = (
-        " FeatureEngine-benchmark/target/"
-        "scala-2.11/FeatureEngine-benchmark-assembly-0.1.jar "
-    )
-
-    BASE_COMMAND =  "java -Xms64g -Xmx100g -classpath " + JAR_LOCATION\
+    BASE_COMMAND =  "java -Xms64g -Xmx100g -classpath " + ScalaAbstractBenchmark.JAR_LOCATION\
             + "org.oceandataexplorer.engine.benchmark.SPMScalaOnly {} "
 
 
@@ -145,7 +140,7 @@ class PythonNoBBBenchmark(Benchmark):
     BASE_COMMAND =  "cd python_benchmark_workflow && python3 spm_nobb.py {} "
 
 
-class PythonMTBenchmark(Benchmark):
+class PythonMultiThreadedBenchmark(Benchmark):
     # "python_mt" designates single threaded runs, equivalent to "python_mt_1"
     VERSION = "python_mt"
     BASE_COMMAND =  "cd python_benchmark_workflow && python3 spm_mt.py {} "
@@ -161,7 +156,7 @@ class MatlabVanillaBenchmark(Benchmark):
         "-r \"spm_vanilla {}; exit\""
     )
 
-class MatlabMTBenchmark(Benchmark):
+class MatlabMultiThreadedBenchmark(Benchmark):
     # "matlab_mt" designates single threaded runs, equivalent to "matlab_mt_1"
     VERSION = "matlab_mt"
     BASE_COMMAND =  (
@@ -260,9 +255,9 @@ if __name__ == "__main__":
         FEMinBenchmark,
         PythonVanillaBenchmark,
         PythonNoBBBenchmark,
-        new_mt_run(PythonMTBenchmark, 2),
+        new_mt_run(PythonMultiThreadedBenchmark, 2),
         MatlabVanillaBenchmark,
-        new_mt_run(MatlabMTBenchmark, 2)
+        new_mt_run(MatlabMultiThreadedBenchmark, 2)
     ]
 
     # optionals arguments for benchmark
