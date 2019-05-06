@@ -74,47 +74,6 @@ RESULTS_DESTINATION = OUTPUT_BASE_DIR +\
     "/results/python_mt_{}/{}/".format(N_NODES, N_THREADS) + RUN_ID
 
 
-def process_file(wav_config):
-    print("Start processing {}".format(wav_config["name"]))
-    tStart = time.time()
-
-    sound_handler = SoundHandler(
-        WAV_FILES_LOCATION,
-        wav_config["name"],
-        wav_config["wav_bits"],
-        wav_config["sample_rate"],
-        wav_config["n_channels"])
-
-    segment_size = int(SEGMENT_DURATION * wav_config["sample_rate"])
-
-    feature_generator = FeatureGenerator(
-        sound_handler, wav_config["timestamp"],
-        wav_config["sample_rate"], CALIBRATION_FACTOR,
-        segment_size, WINDOW_SIZE, WINDOW_OVERLAP, NFFT)
-
-    results = feature_generator.generate()
-
-    # extract sound's id from sound file name
-    # (sound's name follow convention described in test/resources/README.md)
-    sound_id = wav_config["name"][:-4]
-
-    resultsHandler = ResultsHandler(
-        sound_id,
-        RESULTS_DESTINATION,
-        segment_size,
-        WINDOW_SIZE,
-        WINDOW_OVERLAP,
-        NFFT
-    )
-
-    resultsHandler.write(results)
-
-    duration = time.time() - tStart
-    print("Finished processing {} in {}".format(wav_config["name"], duration))
-
-    return duration
-
-
 if __name__ == "__main__":
     wav_task_configs = [{
         "location": WAV_FILES_LOCATION,
@@ -124,7 +83,13 @@ if __name__ == "__main__":
         ),
         "sample_rate": 32768.0,
         "wav_bits": 16,
-        "n_channels": 1
+        "n_channels": 1,
+        "results_destination": RESULTS_DESTINATION,
+        "calibration_factor": CALIBRATION_FACTOR,
+        "segment_duration": SEGMENT_DURATION,
+        "window_size": WINDOW_SIZE,
+        "window_overlap": WINDOW_OVERLAP,
+        "nfft": NFFT
     } for file_metadata in pd.read_csv(
         METADATA_FILE_PATH, delimiter=";").values
     ]
@@ -134,7 +99,8 @@ if __name__ == "__main__":
     ncpus = N_THREADS
 
     with Pool(processes=ncpus) as pool:
-        durations = pool.map(process_file, wav_task_configs[:N_FILES])
+        durations = pool.map(
+            single_file_handler.process_file, wav_task_configs[:N_FILES])
         print(
             "\nFinished job, processing file take {} sec avg"
             .format(np.average(durations))
