@@ -82,7 +82,7 @@ if __name__ == "__main__":
         "window_overlap": WINDOW_OVERLAP,
         "nfft": NFFT
     } for file_metadata in pd.read_csv(
-        METADATA_FILE_PATH, delimiter=";").values]
+        METADATA_FILE_PATH, delimiter=";", header=None).values]
 
     for task_config in task_configs[:N_FILES]:
         single_file_handler.process_file(task_config)

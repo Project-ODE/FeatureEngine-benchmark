@@ -117,7 +117,7 @@ if __name__ == "__main__":
         "window_overlap": WINDOW_OVERLAP,
         "nfft": NFFT
     } for file_metadata in pd.read_csv(
-        METADATA_FILE_PATH, delimiter=";").values
+        METADATA_FILE_PATH, delimiter=";", header=None).values
     ]
 
     durations = client.map(
