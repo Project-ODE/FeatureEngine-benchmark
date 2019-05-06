@@ -126,7 +126,7 @@ if __name__ == "__main__":
         "wav_bits": 16,
         "n_channels": 1
     } for file_metadata in pd.read_csv(
-        METADATA_FILE_PATH, delimiter=";").values
+        METADATA_FILE_PATH, delimiter=";", header=None).values
     ]
 
     # To use all available cores:
